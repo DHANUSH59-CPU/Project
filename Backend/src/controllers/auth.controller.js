@@ -20,7 +20,7 @@ const {
 const signup = async (req, res) => {
   validate(req.body);
 
-  const { emailId, firstName, password } = req.body;
+  const { emailId, firstName, password, role } = req.body;
   try {
     if (!emailId || !firstName || !password) {
       throw new Error("All fields are required");
@@ -45,12 +45,12 @@ const signup = async (req, res) => {
       emailId,
       password: hashPassword,
       firstName,
-      verificationToken,
+      role: "user",
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000,
     });
 
     await user.save();
-    await sendVerificationEmail(user.emailId, verificationToken);
+    // await sendVerificationEmail(user.emailId, verificationToken);
 
     // jwt
     generateTokenAndSetCookie(res, user._id, user.role);
@@ -149,6 +149,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   // we will add Blocked Tokens into reddis here
+  // passport example for reddis
   try {
     const token = req.cookies?.token;
 
@@ -249,6 +250,53 @@ const checkAuth = async (req, res) => {
   }
 };
 
+const adminRegister = async (req, res) => {
+  try {
+    validate(req.body);
+
+    const { emailId, password, firstName } = req.body;
+
+    if (!emailId || !password || !firstName)
+      throw new Error("All fields are required");
+
+    const userAlreadyExists = await User.findOne({ emailId });
+    if (userAlreadyExists) {
+      return res
+        .status(400)
+        .json({ sucess: false, message: "User Already Exists" });
+    }
+
+    // Hashing the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    const user = new User({
+      emailId,
+      password: hashedPassword,
+      firstName,
+      verificationToken,
+      verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+      role: "admin",
+    });
+
+    await user.save();
+
+    // await sendVerificationEmail(user.emailId, verificationToken)
+
+    // JWT Token
+    generateTokenAndSetCookie(res, user._id, "admin");
+    res.status(201).json({
+      sucess: true,
+      message: "Created Sucessfully",
+      user: { ...user._doc, password: undefined },
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -257,4 +305,5 @@ module.exports = {
   forgotpassword,
   resetPassword,
   checkAuth,
+  adminRegister,
 };

@@ -8,9 +8,11 @@ const {
   forgotpassword,
   resetPassword,
   checkAuth,
+  adminRegister,
 } = require("../controllers/auth.controller");
 
 const userMiddleware = require("../middleware/userMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
 const verifyToken = require("../middleware/verifyToken");
 const { loginLimiter } = require("../middleware/loginLimiter");
 
@@ -22,6 +24,7 @@ authRouter.post("/signup", signup);
 authRouter.post("/verify-email", verifyEmail);
 authRouter.post("/login", loginLimiter, login);
 authRouter.get("/logout", userMiddleware, logout);
+authRouter.post("/admin/register", adminMiddleware, adminRegister);
 
 authRouter.post("/forgot-password", forgotpassword);
 authRouter.post("/reset-password/:token", resetPassword);
