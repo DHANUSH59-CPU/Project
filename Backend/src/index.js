@@ -6,6 +6,7 @@ const { connectDB } = require("./config/connectDB");
 const redisClient = require("./config/redis");
 
 const { authRouter } = require("./routes/auth");
+const { problemRouter } = require("./routes/problemRouter");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,7 @@ app.use(cookieParser()); // Used to deconstruct the token from cookie
 // });
 
 app.use("/user", authRouter);
+app.use("/problem", problemRouter);
 
 const InitizializeConnection = async () => {
   try {
