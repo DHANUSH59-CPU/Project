@@ -192,6 +192,8 @@ const updateProblem = async (req, res) => {
         new: true,
       }
     );
+
+    res.status(200).send("Problem Updated successfully");
   } catch (err) {
     res.status(404).json({ success: false, message: err.message });
   }
@@ -245,8 +247,8 @@ const fetchAllProblem = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const fetchAllProblem = await Problem.find(
-      {}.select("_id title description difficulty tags")
+    const fetchAllProblem = await Problem.find({}).select(
+      "_id title description difficulty tags"
     );
 
     if (fetchAllProblem.length === 0) {

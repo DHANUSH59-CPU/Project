@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const { Schema } = mongoose;
 const userScheme = new mongoose.Schema(
   {
     firstName: {
@@ -50,6 +50,15 @@ const userScheme = new mongoose.Schema(
       type: String,
       enum: ["user", "admin"],
       default: "user",
+    },
+    problemSolved: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "problem",
+        },
+      ],
+      default: [],
     },
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,
