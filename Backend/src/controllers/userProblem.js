@@ -101,4 +101,168 @@ const createProblem = async (req, res) => {
   }
 };
 
-module.exports = { createProblem };
+const updateProblem = async (req, res) => {
+  const { id } = req.params;
+
+  const {
+    title,
+    description,
+    difficulty,
+    tags,
+    visibleTestCases,
+    hiddenTestCases,
+    startCode,
+    referenceSolution,
+  } = req.body;
+
+  try {
+    if (!id) {
+      return res
+        .status(404)
+        .json({ success: false, message: "problem not found" });
+    }
+
+    const DsaProblem = await Problem.findById(id);
+
+    if (!DsaProblem) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Problem not found" });
+    }
+
+    if (!Array.isArray(visibleTestCases) || visibleTestCases.length === 0) {
+      throw new Error("visibleTestCases must be a non-empty array");
+    }
+
+    if (!Array.isArray(referenceSolution) || referenceSolution.length === 0) {
+      throw new Error("referenceSolution must be a non-empty array");
+    }
+
+    for (const { language, completeCode } of referenceSolution) {
+      const languageId = getLanguageById(language);
+      if (!languageId) {
+        return res.status(400).send(`Unsupported language: ${language}`);
+      }
+
+      console.log(`Creating submissions for language: ${language}`);
+
+      // The submisssions should be array of objects as we saw in docs
+      const submissions = visibleTestCases.map((testcase) => ({
+        source_code: completeCode,
+        language_id: languageId,
+        stdin: testcase.input,
+        expected_output: testcase.output,
+      }));
+
+      console.log(submissions);
+
+      const submitResult = await submitBatch(submissions);
+      // I will get token as result
+      // By using token we can find if our submissions passed or not
+      console.log("SUBMIT RESULT --->", submitResult);
+
+      if (!submitResult || !Array.isArray(submitResult)) {
+        return res
+          .status(500)
+          .send("submitBatch did not return a valid array.");
+      }
+
+      const resultToken = submitResult.map((value) => value.token);
+      // console.log(resultToken);
+
+      const testresult = await submitToken(resultToken);
+      console.log("Testresult --->", testresult);
+
+      for (const test of testresult) {
+        if (test.status_id !== 3) {
+          return res
+            .status(400)
+            .send(`Test case failed for language : ${language}`);
+        }
+      }
+    }
+
+    const newProblem = await Problem.findByIdAndUpdate(
+      id,
+      {
+        ...req.body,
+      },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
+  } catch (err) {
+    res.status(404).json({ success: false, message: err.message });
+  }
+};
+
+const deleteProblem = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const DsaProblem = await Problem.findById(id);
+
+    if (!DsaProblem) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Problem Not Found" });
+    }
+
+    const deletedProblem = await Problem.findByIdAndDelete(id);
+    if (!deletedProblem) {
+      return res.status(404).send("Problemn is missing");
+    }
+
+    res.status(200).send("Successfully deleetd");
+  } catch (err) {
+    res.status(404).json({ success: false, message: err.message });
+  }
+};
+
+const fetchProblemById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      return res.status(400).send("Problem Id not Found");
+    }
+
+    const fetchProblem = await Problem.findById(id).select(
+      "_id title description difficulty tags visibleTestCases startCode referenceSolution"
+    );
+
+    if (!fetchProblem) {
+      return res.status(400).send("Problem not found");
+    }
+    res.status(200).send(fetchProblem);
+  } catch (err) {
+    console.log("Error Found : ", err.message);
+    res.status(404).json({ success: false, message: err.message });
+  }
+};
+
+const fetchAllProblem = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const fetchAllProblem = await Problem.find(
+      {}.select("_id title description difficulty tags")
+    );
+
+    if (fetchAllProblem.length === 0) {
+      return res.status(404).send("Problem is missing");
+    }
+
+    res.status(200).send(fetchAllProblem);
+  } catch (err) {
+    return res.status(404).json({ success: false, message: err.message });
+  }
+};
+
+module.exports = {
+  createProblem,
+  updateProblem,
+  deleteProblem,
+  fetchProblemById,
+  fetchAllProblem,
+};

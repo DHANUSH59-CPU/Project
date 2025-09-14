@@ -3,16 +3,27 @@ const express = require("express");
 const problemRouter = express.Router();
 
 const adminMiddleware = require("../middleware/adminMiddleware");
+const userMiddleware = require("../middleware/userMiddleware");
 
-const { createProblem } = require("../controllers/userProblem");
+const {
+  createProblem,
+  updateProblem,
+  deleteProblem,
+  fetchAllProblem,
+  fetchProblemById,
+} = require("../controllers/userProblem");
 
 // Create => Only access to the admin
 problemRouter.post("/create", adminMiddleware, createProblem);
-// problemRouter.patch("/:id", updateProblem);
-// problemRouter.delete("/:id", deleteProblem);
+problemRouter.put("/update/:id", adminMiddleware, updateProblem);
+problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
 
-// problemRouter.get("/:id", getProblemById);
-// problemRouter.get("/", getAllProblem);
-// problemRouter.get("/user", solvedAllProblemByuser);
+problemRouter.get("/problemById/:id", userMiddleware, fetchProblemById);
+problemRouter.get("/allProblems", userMiddleware, fetchAllProblem);
+// problemRouter.get(
+//   "/problemSolvedByUser",
+//   userMiddleware,
+//   solvedAllProblemByuser
+// );
 
 module.exports = { problemRouter };
