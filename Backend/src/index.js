@@ -7,7 +7,7 @@ const redisClient = require("./config/redis");
 
 const { authRouter } = require("./routes/auth");
 const { problemRouter } = require("./routes/problemRouter");
-const { submitRouter } = require("./routes/submit");
+const { submitRouter } = require("./routes/submissionRouter");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;

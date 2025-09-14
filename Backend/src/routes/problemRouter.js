@@ -11,6 +11,7 @@ const {
   deleteProblem,
   fetchAllProblem,
   fetchProblemById,
+  solvedAllProblemByuser,
 } = require("../controllers/userProblem");
 
 // Create => Only access to the admin
@@ -20,10 +21,10 @@ problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
 
 problemRouter.get("/problemById/:id", userMiddleware, fetchProblemById);
 problemRouter.get("/allProblems", userMiddleware, fetchAllProblem);
-// problemRouter.get(
-//   "/problemSolvedByUser",
-//   userMiddleware,
-//   solvedAllProblemByuser
-// );
+problemRouter.get(
+  "/problemSolvedByUser",
+  userMiddleware,
+  solvedAllProblemByuser
+);
 
 module.exports = { problemRouter };

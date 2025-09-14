@@ -9,6 +9,7 @@ const {
   resetPassword,
   checkAuth,
   adminRegister,
+  deleteProfile,
 } = require("../controllers/auth.controller");
 
 const userMiddleware = require("../middleware/userMiddleware");
@@ -25,6 +26,7 @@ authRouter.post("/verify-email", verifyEmail);
 authRouter.post("/login", loginLimiter, login);
 authRouter.get("/logout", userMiddleware, logout);
 authRouter.post("/admin/register", adminMiddleware, adminRegister);
+authRouter.delete("/profile", userMiddleware, deleteProfile);
 
 authRouter.post("/forgot-password", forgotpassword);
 authRouter.post("/reset-password/:token", resetPassword);

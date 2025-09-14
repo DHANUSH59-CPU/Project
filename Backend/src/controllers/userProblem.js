@@ -1,5 +1,6 @@
 const { json } = require("express");
 const Problem = require("../models/problem");
+const User = require("../models/user.model");
 
 const {
   getLanguageById,
@@ -261,10 +262,26 @@ const fetchAllProblem = async (req, res) => {
   }
 };
 
+const solvedAllProblemByuser = async (req, res) => {
+  try {
+    const userId = req.result._id;
+
+    const user = await User.findById(userId).populate({
+      path: "problemSolved",
+      select: "_id title difficulty tags",
+    });
+
+    return res.status(200).send(user.problemSolved);
+  } catch (err) {
+    return res.status(404).json({ success: fail, message: err.message });
+  }
+};
+
 module.exports = {
   createProblem,
   updateProblem,
   deleteProblem,
   fetchProblemById,
   fetchAllProblem,
+  solvedAllProblemByuser,
 };

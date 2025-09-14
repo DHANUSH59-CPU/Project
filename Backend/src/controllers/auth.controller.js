@@ -297,6 +297,20 @@ const adminRegister = async (req, res) => {
   }
 };
 
+const deleteProfile = async (req, res) => {
+  try {
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const userId = req.result._id;
+    User.findByIdAndDelete(userId);
+
+    Submission.deleteMany({ userId });
+
+    res.status(200).send("Deleted Sucessfully");
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -306,4 +320,5 @@ module.exports = {
   resetPassword,
   checkAuth,
   adminRegister,
+  deleteProfile,
 };

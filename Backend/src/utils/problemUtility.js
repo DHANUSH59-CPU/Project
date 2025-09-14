@@ -23,7 +23,7 @@ const submitBatch = async (submissions) => {
       base64_encoded: "false",
     },
     headers: {
-      "x-rapidapi-key": "fbd984a75dmsh1ba48204c034597p119ac2jsndac2de7a02bb",
+      "x-rapidapi-key": process.env.JUDGE0_KEY,
       "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
       "Content-Type": "application/json",
     },
@@ -54,7 +54,7 @@ const submitToken = async (resultToken) => {
       fields: "*",
     },
     headers: {
-      "x-rapidapi-key": "fbd984a75dmsh1ba48204c034597p119ac2jsndac2de7a02bb",
+      "x-rapidapi-key": process.env.JUDGE0_KEY,
       "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
     },
   };
