@@ -12,6 +12,7 @@ const {
   fetchAllProblem,
   fetchProblemById,
   solvedAllProblemByuser,
+  submittedProblem,
 } = require("../controllers/userProblem");
 
 // Create => Only access to the admin
@@ -26,5 +27,6 @@ problemRouter.get(
   userMiddleware,
   solvedAllProblemByuser
 );
+problemRouter.get("/submittedProblem/:pid", userMiddleware, submittedProblem);
 
 module.exports = { problemRouter };
