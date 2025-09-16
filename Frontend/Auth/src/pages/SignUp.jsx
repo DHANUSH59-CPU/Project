@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../store/authSlice";
 
 // Zod Schema (validations)
 const signupScheme = z.object({
@@ -20,8 +23,17 @@ const signupScheme = z.object({
 
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" })
-    .max(100, { message: "Password too long" }),
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter",
+    })
+    .regex(/[0-9]/, { message: "Password must contain at least one number" })
+    .regex(/[@$!%*?&#]/, {
+      message: "Password must contain at least one special character",
+    }),
 
   // confirmPassword: z.string(),
 });
@@ -31,6 +43,13 @@ const signupScheme = z.object({
 // });
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isAuthenticated, loading, error } = useSelector(
+    (state) => state.authSlice
+  );
+
   const {
     register,
     handleSubmit,
@@ -39,26 +58,15 @@ const SignUp = () => {
     resolver: zodResolver(signupScheme),
   });
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
   // Submit Handler
   const onSubmit = async (data) => {
-    try {
-      const payload = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        profile_img: data.profile_img || null,
-        emailId: data.emailId,
-        password: data.password,
-        age: data.age,
-      };
-
-      // const res = await axios.post("http://localhost:5000/api/signup", payload);
-
-      alert("Signup successful!");
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-      alert("Signup failed. Check console for details.");
-    }
+    dispatch(registerUser(data));
   };
 
   return (
@@ -129,7 +137,12 @@ const SignUp = () => {
               )}
 
               <div>
-                <a className="link link-hover">Forgot password?</a>
+                <a
+                  className="link link-hover"
+                  onClick={() => navigate("/login")}
+                >
+                  Alredy Registered?? Sign in
+                </a>
               </div>
               <button
                 type="submit"

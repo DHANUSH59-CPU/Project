@@ -159,7 +159,12 @@ const logout = async (req, res) => {
     await redisClient.set(`token:${token}`, "Blocked");
     await redisClient.expireAt(`token:${token}`, payload.exp);
 
-    res.clearCookie("token");
+    res.cookie("token", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      expires: new Date(0),
+    });
     res.status(200).json({ success: true, message: "Logout is successfull" });
   } catch (err) {
     res.status(404).json({ success: false, message: err.message });
@@ -246,7 +251,14 @@ const checkAuth = async (req, res) => {
     res.status(200).json({ success: true, user });
   } catch (error) {
     console.log("Error in checkAuth ", error);
-    res.status(400).json({ success: false, message: error.message });
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
   }
 };
 

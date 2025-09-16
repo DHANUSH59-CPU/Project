@@ -1,10 +1,13 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="navbar bg-base-100 shadow-2xl">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <a className="btn btn-ghost text-xl">CodeAI</a>
       </div>
       <div className="dropdown mx-4">
         <div tabIndex={0} role="button" className="btn m-1">
@@ -21,7 +24,7 @@ const Header = () => {
         </div>
         <ul
           tabIndex={0}
-          className="dropdown-content bg-base-300 rounded-box z-10 w-52 p-2 shadow-2xl"
+          className="dropdown-content bg-base-300 rounded-box z-10 w-40 p-2 shadow-2xl"
         >
           {["default", "retro", "valentine", "aqua", "coffee", "forest"].map(
             (theme) => (
@@ -65,7 +68,7 @@ const Header = () => {
             <a>Settings</a>
           </li>
           <li>
-            <a>Logout</a>
+            <a onClick={() => navigate("/logout")}>Logout</a>
           </li>
         </ul>
       </div>

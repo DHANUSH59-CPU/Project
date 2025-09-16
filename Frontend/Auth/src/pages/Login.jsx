@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../store/authSlice";
 
 const loginSchema = z.object({
   emailId: z.string().email({ message: "Invalid Email" }),
@@ -21,11 +24,29 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { isAuthenticated, loading, error } = useSelector(
+    (state) => state.authSlice
+  );
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
+  const submitted = (data) => {
+    dispatch(loginUser(data));
+  };
+
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -38,7 +59,7 @@ const Login = () => {
         </div>
         <form
           className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl"
-          onSubmit={handleSubmit((data) => console.log(data))}
+          onSubmit={handleSubmit(submitted)}
         >
           <div className="card-body">
             <fieldset className="fieldset">
@@ -66,7 +87,12 @@ const Login = () => {
                 </p>
               )}
               <div>
-                <a className="link link-hover">Forgot password?</a>
+                <p
+                  className="link link-hover"
+                  onClick={() => navigate("/signup")}
+                >
+                  Forgot password?
+                </p>
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
             </fieldset>

@@ -1,4 +1,7 @@
 const express = require("express");
+
+const cors = require("cors");
+
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 
@@ -15,6 +18,13 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json());
 app.use(cookieParser()); // Used to deconstruct the token from cookie
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 // app.use("/", (req, res) => {
 //   res.send("Hello world");

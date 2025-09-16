@@ -24,7 +24,7 @@ authRouter.get("/check-auth", verifyToken, checkAuth); // Will be checked whenev
 authRouter.post("/signup", signup);
 authRouter.post("/verify-email", verifyEmail);
 authRouter.post("/login", loginLimiter, login);
-authRouter.get("/logout", userMiddleware, logout);
+authRouter.post("/logout", userMiddleware, logout);
 authRouter.post("/admin/register", adminMiddleware, adminRegister);
 authRouter.delete("/profile", userMiddleware, deleteProfile);
 
