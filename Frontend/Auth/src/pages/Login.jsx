@@ -27,36 +27,118 @@ const Login = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
   return (
-    <div className="flex justify-center items-center">
-      <form
-        onSubmit={handleSubmit((data) => console.log(data))}
-        className="card flex flex-col shadow-2xl rounded-lg w-96 h-[500px] p-6 gap-4"
-      >
-        <div>
-          {" "}
-          <h2 className="text-xl font-bold text-center">Login</h2>
+    <div className="hero bg-base-200 min-h-screen">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="text-center lg:text-left">
+          <h1 className="text-5xl font-bold">Login now!</h1>
+          <p className="py-6">
+            Join HackForge to practice coding, compete with peers, and elevate
+            your problem-solving abilities to new heights.
+          </p>
         </div>
+        <form
+          className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl"
+          onSubmit={handleSubmit((data) => console.log(data))}
+        >
+          <div className="card-body">
+            <fieldset className="fieldset">
+              <label className="label">Email</label>
+              <input
+                {...register("emailId")}
+                type="email"
+                className="input input-primary"
+                placeholder="Email"
+              />
+              {errors.emailId && (
+                <p className="text-red-400 text-sm">{errors.emailId.message}</p>
+              )}
 
-        <input
-          {...register("emailId", { required: true })}
-          className="input input-primary"
-          placeholder="EmailId"
-        />
-        {errors.emailId && (
-          <p className="text-red-400 text-sm">{errors.emailId.message}</p>
-        )}
-        <input
-          {...register("password", { required: true })}
-          className="input input-primary"
-          placeholder="Password"
-        />
-        {errors.password && (
-          <p className="text-red-400 text-sm">{errors.password.message}</p>
-        )}
-        <button className="btn">Submit</button>
-      </form>
+              <label className="label">Password</label>
+              <input
+                {...register("password")}
+                type="password"
+                placeholder="Password"
+                className="input input-primary"
+              />
+              {errors.password && (
+                <p className="text-red-400 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
+              <div>
+                <a className="link link-hover">Forgot password?</a>
+              </div>
+              <button className="btn btn-neutral mt-4">Login</button>
+            </fieldset>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
 
 export default Login;
+
+//  <div className="bg-gray-900/70  backdrop-blur-lg p-8 rounded-2xl shadow-xl max-w-md mx-auto border border-gray-700 hover:border-indigo-500 transition mt-20">
+//       <form
+//         onSubmit={handleSubmit(onSubmit)}
+//         className="flex flex-col  gap-4 p-6 rounded-lg shadow-2xl w-96"
+//       >
+//         <h2 className="text-xl font-bold text-center">Sign Up</h2>
+
+// <input
+//   {...register("firstName")}
+//   placeholder="First Name"
+//   className="input input-primary"
+// />
+// {errors.firstName && (
+//   <p className="text-red-400 text-sm">{errors.firstName.message}</p>
+// )}
+//
+// <input
+//   {...register("lastName")}
+//   placeholder="Last Name"
+//   className="input input-primary"
+// />
+// {errors.lastName && (
+//   <p className="text-red-400 text-sm">{errors.lastName.message}</p>
+// )}
+
+// <input
+//   {...register("emailId")}
+//   placeholder="Email Address"
+//   className="input input-primary"
+// />
+// {errors.emailId && (
+//   <p className="text-red-400 text-sm">{errors.emailId.message}</p>
+// )}
+
+// <input
+//   {...register("password")}
+//   type="password"
+//   placeholder="Password"
+//   className="input input-primary"
+// />
+// {errors.password && (
+//   <p className="text-red-400 text-sm">{errors.password.message}</p>
+// )}
+
+//         <input
+//           {...register("confirmPassword")}
+//           type="password"
+//           placeholder="Confirm Password"
+//           className="input input-primary"
+//         />
+//         {errors.confirmPassword && (
+//           <p className="text-red-400 text-sm">
+//             {errors.confirmPassword.message}
+//           </p>
+//         )}
+
+//         <button type="submit" disabled={isSubmitting} className="btn">
+//           {isSubmitting ? "Submitting..." : "Sign Up"}
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };

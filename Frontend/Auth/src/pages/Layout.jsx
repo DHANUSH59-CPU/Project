@@ -6,7 +6,7 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <main className="flex-grow pt-20">
+      <main className="flex-grow ">
         <Outlet />
       </main>
     </>
