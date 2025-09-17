@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
-import useTheme from "../hooks/useTheme";
+import { useTheme } from "../context/ThemeContext";
 
 const Header = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { theme, changeTheme } = useTheme();
+  const { theme, changeTheme, availableThemes } = useTheme();
 
   return (
     <div className="navbar bg-base-100 shadow-2xl">
@@ -38,8 +38,7 @@ const Header = () => {
           tabIndex={0}
           className="dropdown-content bg-base-300 rounded-box z-10 w-40 p-2 shadow-2xl"
         >
-          {["dark", "light", "retro", "valentine", "aqua", "coffee", "forest"].map(
-            (themeName) => (
+          {availableThemes.map((themeName) => (
               <li key={themeName}>
                 <input
                   type="radio"

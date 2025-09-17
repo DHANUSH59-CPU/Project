@@ -11,14 +11,14 @@ import Loading from "./components/Loading";
 import { Navigate } from "react-router-dom";
 import Logout from "./pages/Logout";
 import ProblemsArena from "./components/ProblemsArena";
-import useTheme from "./hooks/useTheme";
+import Admin from "./components/adminPanel/admin";
+import AdminPanel from "./components/adminPanel/AdminPanel";
 
 export default function App() {
-  const { isAuthenticated, loading } = useSelector((state) => state.authSlice);
+  const { isAuthenticated, loading, user } = useSelector(
+    (state) => state.authSlice
+  );
   const dispatch = useDispatch();
-  
-  // Initialize theme on app startup
-  useTheme();
 
   useEffect(() => {
     dispatch(authenticateUser());
@@ -49,6 +49,26 @@ export default function App() {
               <Route
                 path="/problems"
                 element={isAuthenticated ? <ProblemsArena /> : <Login />}
+              />
+              <Route
+                path="/admin"
+                element={
+                  isAuthenticated && user.role === "admin" ? (
+                    <Admin />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/admin/create"
+                element={
+                  isAuthenticated && user.role === "admin" ? (
+                    <AdminPanel />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
               />
             </Route>
           </Routes>

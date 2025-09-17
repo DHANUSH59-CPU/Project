@@ -43,6 +43,7 @@ export const authenticateUser = createAsyncThunk(
       // console.log(response);
       return response.data.user;
     } catch (error) {
+      // console.log(error);
       return rejectWithValue(
         error.response?.data?.message || "Something went wrong"
       );

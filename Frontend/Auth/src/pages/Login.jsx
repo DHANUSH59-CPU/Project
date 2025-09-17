@@ -53,8 +53,8 @@ const Login = () => {
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Login now!</h1>
           <p className="py-6">
-            Join HackForge to practice coding, compete with peers, and elevate
-            your problem-solving abilities to new heights.
+            Join CodeAI to practice coding, compete with peers, and elevate your
+            problem-solving abilities to new heights.
           </p>
         </div>
         <form
@@ -91,8 +91,11 @@ const Login = () => {
                   className="link link-hover"
                   onClick={() => navigate("/signup")}
                 >
-                  Forgot password?
+                  Don't have an account? SignUp
                 </p>
+                {error && error != "Unauthorized - no token provided" && (
+                  <p className="text-red-900 mt-4">{error}</p>
+                )}
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
             </fieldset>

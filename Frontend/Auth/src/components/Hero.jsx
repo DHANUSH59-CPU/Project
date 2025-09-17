@@ -10,7 +10,7 @@ const Hero = () => {
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">Welcome to CodeAI</h1>
             <p className="py-6">
-              Join HackForge to practice coding, compete with peers, and elevate
+              Join CodeAI to practice coding, compete with peers, and elevate
               your problem-solving abilities to new heights.
             </p>
             <button

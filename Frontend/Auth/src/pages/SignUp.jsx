@@ -75,8 +75,8 @@ const SignUp = () => {
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">SignUp Now!</h1>
           <p className="py-6">
-            Join HackForge to practice coding, compete with peers, and elevate
-            your problem-solving abilities to new heights.
+            Join CodeAI to practice coding, compete with peers, and elevate your
+            problem-solving abilities to new heights.
           </p>
         </div>
         <form
