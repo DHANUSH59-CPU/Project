@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
 @plugin "daisyui" {
-  themes: dark --default, light --prefersdark, retro, cyberpunk, valentine, aqua,
-    coffee, black, forest;
+  themes: dark --default, light --prefersdark, retro, valentine, aqua, coffee,
+    forest;
 }

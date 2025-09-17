@@ -6,7 +6,7 @@ const generateTokenAndSetCookie = async (res, userId, role) => {
   });
 
   res.cookie("token", token, {
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true, // Prevent XSS attacks
     sameSite: "strict", // CSRF protection
     secure: process.env.NODE_ENV === "production", // HTTPS only in production

@@ -1,6 +1,4 @@
-import { usePWA } from "./hooks/usePWA";
-import Header from "./components/Header";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -12,11 +10,15 @@ import { useEffect } from "react";
 import Loading from "./components/Loading";
 import { Navigate } from "react-router-dom";
 import Logout from "./pages/Logout";
+import ProblemsArena from "./components/ProblemsArena";
+import useTheme from "./hooks/useTheme";
 
 export default function App() {
   const { isAuthenticated, loading } = useSelector((state) => state.authSlice);
-
   const dispatch = useDispatch();
+  
+  // Initialize theme on app startup
+  useTheme();
 
   useEffect(() => {
     dispatch(authenticateUser());
@@ -43,6 +45,10 @@ export default function App() {
               <Route
                 path="/logout"
                 element={isAuthenticated ? <Logout /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/problems"
+                element={isAuthenticated ? <ProblemsArena /> : <Login />}
               />
             </Route>
           </Routes>

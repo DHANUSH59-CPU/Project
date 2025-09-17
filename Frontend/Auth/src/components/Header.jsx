@@ -1,13 +1,25 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router";
+import useTheme from "../hooks/useTheme";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.authSlice);
+  const { theme, changeTheme } = useTheme();
 
   return (
     <div className="navbar bg-base-100 shadow-2xl">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">CodeAI</a>
+        <Link className="btn btn-ghost text-xl" to={"/"}>
+          CodeAI
+        </Link>
+      </div>
+
+      <div>
+        <Link role="button" className="btn m-1" to="/problems">
+          Problems
+        </Link>
       </div>
       <div className="dropdown mx-4">
         <div tabIndex={0} role="button" className="btn m-1">
@@ -26,15 +38,17 @@ const Header = () => {
           tabIndex={0}
           className="dropdown-content bg-base-300 rounded-box z-10 w-40 p-2 shadow-2xl"
         >
-          {["default", "retro", "valentine", "aqua", "coffee", "forest"].map(
-            (theme) => (
-              <li key={theme}>
+          {["dark", "light", "retro", "valentine", "aqua", "coffee", "forest"].map(
+            (themeName) => (
+              <li key={themeName}>
                 <input
                   type="radio"
                   name="theme-dropdown"
                   className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                  aria-label={theme}
-                  value={theme}
+                  aria-label={themeName}
+                  value={themeName}
+                  checked={theme === themeName}
+                  onChange={() => changeTheme(themeName)}
                 />
               </li>
             )
