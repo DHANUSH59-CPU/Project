@@ -2,11 +2,13 @@ const axios = require("axios");
 
 const getLanguageById = (lang) => {
   const language = {
-    cpp: 54,
     "c++": 54,
-    java: 62,
-    javascript: 63,
-    python: 71,
+    "cpp": 54,
+    "java": 62,
+    "javascript": 63,
+    "js": 63,
+    "python": 71,
+    "py": 71,
   };
   return language[lang.toLowerCase()];
 };
@@ -50,7 +52,7 @@ const submitToken = async (resultToken) => {
     url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
     params: {
       tokens: resultToken.join(","),
-      base64_encoded: "false",
+      base64_encoded: "true",
       fields: "*",
     },
     headers: {

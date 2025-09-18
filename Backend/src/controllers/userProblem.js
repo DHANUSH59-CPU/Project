@@ -1,6 +1,6 @@
-const { json } = require("express");
 const Problem = require("../models/problem");
 const User = require("../models/user.model");
+const Submission = require("../models/submission.model");
 
 const {
   getLanguageById,
@@ -71,6 +71,7 @@ const createProblem = async (req, res) => {
 
       for (const test of testresult) {
         if (test.status_id !== 3) {
+          console.log(test.status_id);
           return res
             .status(400)
             .send(`Test case failed for language : ${language}`);
@@ -273,7 +274,7 @@ const solvedAllProblemByuser = async (req, res) => {
 
     return res.status(200).send(user.problemSolved);
   } catch (err) {
-    return res.status(404).json({ success: fail, message: err.message });
+    return res.status(404).json({ success: false, message: err.message });
   }
 };
 

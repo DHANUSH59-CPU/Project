@@ -96,190 +96,371 @@ function AdminPanel() {
   };
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Create New Problem
-      </h1>
+    <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 to-base-300">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+          Create New Problem
+        </h1>
+        <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
+        <p className="text-base-content/70 mt-4 text-lg">
+          Build the next coding challenge
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-8 max-w-4xl mx-auto"
+      >
         {/* Basic Info */}
-        <div className="card bg-base-200 shadow">
+        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
           <div className="card-body">
-            <h2 className="card-title">Basic Information</h2>
+            <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
+              <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
+              Basic Information
+            </h2>
             <div className="form-control">
-              <label className="label">Title</label>
+              <label className="label">
+                <span className="label-text font-semibold text-base">
+                  Title
+                </span>
+              </label>
               <input
                 {...register("title")}
                 type="text"
-                placeholder="Problem title"
-                className={`input input-bordered w-full ${
-                  errors.title ? "input-error" : ""
+                placeholder="Enter a compelling problem title..."
+                className={`input input-bordered w-full transition-all duration-200 focus:scale-[1.02] focus:shadow-lg ${
+                  errors.title ? "input-error" : "focus:border-primary"
                 }`}
               />
               {errors.title && (
-                <span className="text-error text-sm">
+                <span className="text-error text-sm mt-1 flex items-center gap-1">
+                  <span className="text-xs">⚠️</span>
                   {errors.title.message}
                 </span>
               )}
             </div>
 
             <div className="form-control">
-              <label className="label">Description</label>
+              <label className="label">
+                <span className="label-text font-semibold text-base">
+                  Description
+                </span>
+              </label>
               <textarea
                 {...register("description")}
-                rows={5}
-                placeholder="Describe the problem"
-                className={`textarea textarea-bordered w-full ${
-                  errors.description ? "textarea-error" : ""
+                rows={6}
+                placeholder="Provide a clear and detailed problem description with examples..."
+                className={`textarea textarea-bordered w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg resize-none ${
+                  errors.description ? "textarea-error" : "focus:border-primary"
                 }`}
               />
               {errors.description && (
-                <span className="text-error text-sm">
+                <span className="text-error text-sm mt-1 flex items-center gap-1">
+                  <span className="text-xs">⚠️</span>
                   {errors.description.message}
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="form-control">
-                <label className="label">Difficulty</label>
+                <label className="label">
+                  <span className="label-text font-semibold text-base">
+                    Difficulty
+                  </span>
+                </label>
                 <select
                   {...register("difficulty")}
-                  className={`select select-bordered ${
-                    errors.difficulty ? "select-error" : ""
+                  className={`select select-bordered transition-all duration-200 focus:scale-[1.02] focus:shadow-lg ${
+                    errors.difficulty ? "select-error" : "focus:border-primary"
                   }`}
                 >
-                  <option value="">Select...</option>
-                  <option value="easy">Easy</option>
-                  <option value="medium">Medium</option>
-                  <option value="hard">Hard</option>
+                  <option value="">Choose difficulty level...</option>
+                  <option value="easy">🟢 Easy</option>
+                  <option value="medium">🟡 Medium</option>
+                  <option value="hard">🔴 Hard</option>
                 </select>
+                {errors.difficulty && (
+                  <span className="text-error text-sm mt-1 flex items-center gap-1">
+                    <span className="text-xs">⚠️</span>
+                    {errors.difficulty.message}
+                  </span>
+                )}
               </div>
 
               <div className="form-control">
-                <label className="label">Tag</label>
+                <label className="label">
+                  <span className="label-text font-semibold text-base">
+                    Category
+                  </span>
+                </label>
                 <select
                   {...register("tags")}
-                  className={`select select-bordered ${
-                    errors.tags ? "select-error" : ""
+                  className={`select select-bordered transition-all duration-200 focus:scale-[1.02] focus:shadow-lg ${
+                    errors.tags ? "select-error" : "focus:border-primary"
                   }`}
                 >
-                  <option value="">Select...</option>
-                  <option value="array">Array</option>
-                  <option value="linkedList">Linked List</option>
-                  <option value="graph">Graph</option>
-                  <option value="dp">DP</option>
+                  <option value="">Choose category...</option>
+                  <option value="array">📊 Array</option>
+                  <option value="linkedList">🔗 Linked List</option>
+                  <option value="graph">🌐 Graph</option>
+                  <option value="dp">⚡ Dynamic Programming</option>
                 </select>
+                {errors.tags && (
+                  <span className="text-error text-sm mt-1 flex items-center gap-1">
+                    <span className="text-xs">⚠️</span>
+                    {errors.tags.message}
+                  </span>
+                )}
               </div>
             </div>
           </div>
         </div>
 
         {/* Visible Test Cases */}
-        <div className="card bg-base-200 shadow">
+        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
           <div className="card-body">
-            <h2 className="card-title">Visible Test Cases</h2>
-            <button
-              type="button"
-              onClick={() =>
-                appendVisible({ input: "", output: "", explanation: "" })
-              }
-              className="btn btn-primary btn-sm w-fit"
-            >
-              + Add Case
-            </button>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="card-title text-2xl flex items-center gap-3">
+                <div className="w-2 h-8 bg-gradient-to-b from-success to-success/70 rounded-full"></div>
+                Visible Test Cases
+                <div className="badge badge-success badge-sm">Public</div>
+              </h2>
+              <button
+                type="button"
+                onClick={() =>
+                  appendVisible({ input: "", output: "", explanation: "" })
+                }
+                className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
+              >
+                <span className="text-lg">+</span>
+                Add Case
+              </button>
+            </div>
             {visibleFields.map((field, index) => (
-              <div key={field.id} className="card bg-base-100 shadow mt-4 p-4">
-                <button
-                  type="button"
-                  onClick={() => removeVisible(index)}
-                  className="btn btn-error btn-xs self-end"
-                >
-                  Remove
-                </button>
-                <input
-                  {...register(`visibleTestCases.${index}.input`)}
-                  placeholder="Input"
-                  className="input input-bordered w-full my-2"
-                />
-                <input
-                  {...register(`visibleTestCases.${index}.output`)}
-                  placeholder="Output"
-                  className="input input-bordered w-full my-2"
-                />
-                <textarea
-                  {...register(`visibleTestCases.${index}.explanation`)}
-                  placeholder="Explanation"
-                  className="textarea textarea-bordered w-full"
-                />
+              <div
+                key={field.id}
+                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-success/30"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <span className="w-6 h-6 bg-success text-success-content rounded-full flex items-center justify-center text-sm font-bold">
+                      {index + 1}
+                    </span>
+                    Test Case {index + 1}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => removeVisible(index)}
+                    className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">Input</span>
+                      <span className="label-text-alt text-xs opacity-70">Multi-line supported</span>
+                    </label>
+                    <textarea
+                      {...register(`visibleTestCases.${index}.input`)}
+                      placeholder="Enter test input (multi-line supported)...&#10;Example:&#10;6&#10;1 3 5 7 9 11&#10;5"
+                      className="textarea textarea-bordered w-full focus:border-success transition-colors duration-200 font-mono text-sm"
+                      rows={4}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        Expected Output
+                      </span>
+                      <span className="label-text-alt text-xs opacity-70">Single or multi-line</span>
+                    </label>
+                    <textarea
+                      {...register(`visibleTestCases.${index}.output`)}
+                      placeholder="Enter expected output...&#10;Example: 2"
+                      className="textarea textarea-bordered w-full focus:border-success transition-colors duration-200 font-mono text-sm"
+                      rows={2}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        Explanation
+                      </span>
+                    </label>
+                    <textarea
+                      {...register(`visibleTestCases.${index}.explanation`)}
+                      placeholder="Explain how this test case works..."
+                      className="textarea textarea-bordered w-full focus:border-success transition-colors duration-200 resize-none"
+                      rows={3}
+                    />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Hidden Test Cases */}
-        <div className="card bg-base-200 shadow">
+        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
           <div className="card-body">
-            <h2 className="card-title">Hidden Test Cases</h2>
-            <button
-              type="button"
-              onClick={() => appendHidden({ input: "", output: "" })}
-              className="btn btn-primary btn-sm w-fit"
-            >
-              + Add Case
-            </button>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="card-title text-2xl flex items-center gap-3">
+                <div className="w-2 h-8 bg-gradient-to-b from-warning to-warning/70 rounded-full"></div>
+                Hidden Test Cases
+                <div className="badge badge-warning badge-sm">Private</div>
+              </h2>
+              <button
+                type="button"
+                onClick={() => appendHidden({ input: "", output: "" })}
+                className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
+              >
+                <span className="text-lg">+</span>
+                Add Case
+              </button>
+            </div>
             {hiddenFields.map((field, index) => (
-              <div key={field.id} className="card bg-base-100 shadow mt-4 p-4">
-                <button
-                  type="button"
-                  onClick={() => removeHidden(index)}
-                  className="btn btn-error btn-xs self-end"
-                >
-                  Remove
-                </button>
-                <input
-                  {...register(`hiddenTestCases.${index}.input`)}
-                  placeholder="Input"
-                  className="input input-bordered w-full my-2"
-                />
-                <input
-                  {...register(`hiddenTestCases.${index}.output`)}
-                  placeholder="Output"
-                  className="input input-bordered w-full my-2"
-                />
+              <div
+                key={field.id}
+                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-warning/30"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-lg flex items-center gap-2">
+                    <span className="w-6 h-6 bg-warning text-warning-content rounded-full flex items-center justify-center text-sm font-bold">
+                      {index + 1}
+                    </span>
+                    Hidden Case {index + 1}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => removeHidden(index)}
+                    className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">Input</span>
+                      <span className="label-text-alt text-xs opacity-70">Multi-line supported</span>
+                    </label>
+                    <textarea
+                      {...register(`hiddenTestCases.${index}.input`)}
+                      placeholder="Enter test input (multi-line supported)...&#10;Example:&#10;6&#10;1 3 5 7 9 11&#10;5"
+                      className="textarea textarea-bordered w-full focus:border-warning transition-colors duration-200 font-mono text-sm"
+                      rows={4}
+                    />
+                  </div>
+                  <div className="form-control">
+                    <label className="label">
+                      <span className="label-text font-medium">
+                        Expected Output
+                      </span>
+                      <span className="label-text-alt text-xs opacity-70">Single or multi-line</span>
+                    </label>
+                    <textarea
+                      {...register(`hiddenTestCases.${index}.output`)}
+                      placeholder="Enter expected output...&#10;Example: 2"
+                      className="textarea textarea-bordered w-full focus:border-warning transition-colors duration-200 font-mono text-sm"
+                      rows={2}
+                    />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Code Templates */}
-        <div className="card bg-base-200 shadow">
+        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
           <div className="card-body">
-            <h2 className="card-title">Code Templates</h2>
-            {["C++", "Java", "JavaScript"].map((lang, index) => (
-              <div key={lang} className="my-4">
-                <h3 className="font-bold mb-2">{lang}</h3>
-                <textarea
-                  {...register(`startCode.${index}.initialCode`)}
-                  placeholder={`${lang} initial code`}
-                  className="textarea textarea-bordered w-full my-2 font-mono"
-                  rows={5}
-                />
-                <textarea
-                  {...register(`referenceSolution.${index}.completeCode`)}
-                  placeholder={`${lang} solution`}
-                  className="textarea textarea-bordered w-full font-mono"
-                  rows={5}
-                />
-              </div>
-            ))}
+            <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
+              <div className="w-2 h-8 bg-gradient-to-b from-info to-info/70 rounded-full"></div>
+              Code Templates
+              <div className="badge badge-info badge-sm">Multi-Language</div>
+            </h2>
+            <div className="grid gap-6">
+              {["C++", "Java", "JavaScript"].map((lang, index) => {
+                const langIcons = {
+                  "C++": "⚡",
+                  Java: "☕",
+                  JavaScript: "🟨",
+                };
+                return (
+                  <div
+                    key={lang}
+                    className="card bg-base-200 border border-base-300 hover:border-info/30 transition-all duration-300"
+                  >
+                    <div className="card-body p-6">
+                      <h3 className="font-bold text-xl mb-4 flex items-center gap-3">
+                        <span className="text-2xl">{langIcons[lang]}</span>
+                        {lang}
+                      </h3>
+                      <div className="space-y-4">
+                        <div className="form-control">
+                          <label className="label">
+                            <span className="label-text font-medium">
+                              Initial Code Template
+                            </span>
+                            <span className="label-text-alt text-xs opacity-70">
+                              Starter code for users
+                            </span>
+                          </label>
+                          <textarea
+                            {...register(`startCode.${index}.initialCode`)}
+                            placeholder={`// ${lang} starter template\n// Write your initial code structure here...`}
+                            className="textarea textarea-bordered w-full font-mono text-sm bg-base-100 focus:border-info transition-colors duration-200 resize-none"
+                            rows={6}
+                          />
+                        </div>
+                        <div className="form-control">
+                          <label className="label">
+                            <span className="label-text font-medium">
+                              Reference Solution
+                            </span>
+                            <span className="label-text-alt text-xs opacity-70">
+                              Complete working solution
+                            </span>
+                          </label>
+                          <textarea
+                            {...register(
+                              `referenceSolution.${index}.completeCode`
+                            )}
+                            placeholder={`// ${lang} complete solution\n// Write the full working solution here...`}
+                            className="textarea textarea-bordered w-full font-mono text-sm bg-base-100 focus:border-info transition-colors duration-200 resize-none"
+                            rows={8}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Submit */}
-        <button type="submit" className="btn btn-primary w-full">
-          Create Problem
-        </button>
+        <div className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl">
+          <div className="card-body text-center">
+            <h3 className="text-lg font-semibold mb-4">
+              Ready to publish your problem?
+            </h3>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg w-full max-w-md mx-auto hover:scale-105 transition-transform duration-200 shadow-lg"
+            >
+              <span className="text-lg">🚀</span>
+              Create Problem
+            </button>
+            <p className="text-sm opacity-70 mt-2">
+              Make sure all fields are filled correctly
+            </p>
+          </div>
+        </div>
       </form>
     </div>
   );

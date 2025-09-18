@@ -35,43 +35,97 @@ const Admin = () => {
   ];
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-base-200 to-base-300 p-6">
       {/* Header */}
-      <div className="text-center mt-10">
-        <h1 className="text-4xl font-extrabold tracking-widest text-base-content drop-shadow-lg animate-pulse">
-          Admin Panel
-        </h1>
-        <p className="mt-2 text-center text-gray-500 text-lg italic tracking-wide">
+      <div className="text-center mt-10 mb-16">
+        <div className="inline-block">
+          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-4">
+            Admin Dashboard
+          </h1>
+          <div className="w-32 h-1 bg-gradient-to-r from-primary via-secondary to-accent mx-auto rounded-full mb-4"></div>
+        </div>
+        <p className="text-base-content/80 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
           Manage coding problems and content on your platform
         </p>
+        <div className="flex justify-center gap-2 mt-4">
+          <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-secondary rounded-full animate-pulse delay-100"></div>
+          <div className="w-2 h-2 bg-accent rounded-full animate-pulse delay-200"></div>
+        </div>
       </div>
 
       {/* Options Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12 px-6 max-w-6xl mx-auto">
-        {adminOptions.map(({ id, title, description, icon: Icon, route }) => (
-          <div
-            key={id}
-            className="card shadow-lg border border-base-300 transition hover:shadow-xl bg-base-300"
-          >
-            <div className="card-body">
-              {/* Icon + Title */}
-              <div className="flex items-center gap-3">
-                <Icon className="w-6 h-6 text-primary" />
-                <h2 className="card-title">{title}</h2>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 px-6 max-w-7xl mx-auto">
+        {adminOptions.map(({ id, title, description, icon: Icon, route }) => {
+          const colorMap = {
+            create: { 
+              gradient: "from-success/20 to-success/5", 
+              border: "border-success/30", 
+              icon: "text-success",
+              button: "btn-success"
+            },
+            update: { 
+              gradient: "from-info/20 to-info/5", 
+              border: "border-info/30", 
+              icon: "text-info",
+              button: "btn-info"
+            },
+            delete: { 
+              gradient: "from-error/20 to-error/5", 
+              border: "border-error/30", 
+              icon: "text-error",
+              button: "btn-error"
+            },
+            createBlog: { 
+              gradient: "from-warning/20 to-warning/5", 
+              border: "border-warning/30", 
+              icon: "text-warning",
+              button: "btn-warning"
+            }
+          };
+          
+          const colors = colorMap[id] || colorMap.create;
+          
+          return (
+            <div
+              key={id}
+              className={`card bg-gradient-to-br ${colors.gradient} backdrop-blur-sm shadow-xl border-2 ${colors.border} hover:shadow-2xl hover:scale-105 transition-all duration-300 group cursor-pointer`}
+            >
+              <div className="card-body p-8 text-center">
+                {/* Icon */}
+                <div className="mx-auto mb-6 relative">
+                  <div className={`w-16 h-16 rounded-full bg-gradient-to-br from-base-100 to-base-200 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 ${colors.border} border-2`}>
+                    <Icon className={`w-8 h-8 ${colors.icon} group-hover:scale-110 transition-transform duration-300`} />
+                  </div>
+                  <div className={`absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br ${colors.gradient} rounded-full border-2 ${colors.border} opacity-80`}></div>
+                </div>
 
-              {/* Description */}
-              <p className="text-sm text-gray-500">{description}</p>
+                {/* Title */}
+                <h2 className="card-title text-xl font-bold mb-3 justify-center group-hover:text-base-content transition-colors duration-300">
+                  {title}
+                </h2>
 
-              {/* Action */}
-              <div className="card-actions justify-end">
-                <Link to={route} className="btn btn-sm btn-primary">
-                  Go
-                </Link>
+                {/* Description */}
+                <p className="text-base-content/70 text-sm leading-relaxed mb-6 min-h-[3rem] flex items-center justify-center">
+                  {description}
+                </p>
+
+                {/* Action */}
+                <div className="card-actions justify-center">
+                  <Link 
+                    to={route} 
+                    className={`btn ${colors.button} btn-sm px-8 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl`}
+                  >
+                    <span className="font-semibold">Launch</span>
+                    <svg className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

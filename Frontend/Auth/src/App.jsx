@@ -10,9 +10,10 @@ import { useEffect } from "react";
 import Loading from "./components/Loading";
 import { Navigate } from "react-router-dom";
 import Logout from "./pages/Logout";
-import ProblemsArena from "./components/ProblemsArena";
+import ProblemsArena from "./pages/ProblemsArena";
 import Admin from "./components/adminPanel/admin";
 import AdminPanel from "./components/adminPanel/AdminPanel";
+import ProblemSolvingPage from "./components/ProblemSolvingPage";
 
 export default function App() {
   const { isAuthenticated, loading, user } = useSelector(
@@ -71,6 +72,10 @@ export default function App() {
                 }
               />
             </Route>
+            <Route
+              path="/problems/:problemId"
+              element={isAuthenticated ? <ProblemSolvingPage /> : <Login />}
+            />
           </Routes>
         )}
       </div>

@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "Context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "disabled": false,
+      "autoApprove": [
+        "search_components",
+        "get_component_info",
+        "get_theme_colors",
+        "validate_classes"
+      ],
+      "disabledTools": []
+    }
+  }
+}
