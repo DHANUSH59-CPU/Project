@@ -84,10 +84,10 @@ const ProblemsArena = () => {
     <div className="container mx-auto p-6 min-h-screen">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-base-content mb-2">
+        <h1 className="text-3xl font-bold text-base-content mb-2 text-center">
           Problems Arena
         </h1>
-        <p className="text-base-content/70">
+        <p className="text-base-content/70 text-center">
           Practice coding problems and improve your skills
         </p>
       </div>
@@ -150,7 +150,7 @@ const ProblemsArena = () => {
             <li
               key={problem._id}
               className="flex justify-between items-center bg-base-100 p-4 rounded-lg hover:bg-base-200 transition-all duration-200 border border-base-300 hover:border-primary/30 hover:shadow-md cursor-pointer group"
-              onClick={() => navigate(`/problems/+${problem._id}`)}
+              onClick={() => navigate(`/problems/${problem._id}`)}
             >
               {/* Left: dot + title + tag */}
               <div className="flex items-center gap-3">
