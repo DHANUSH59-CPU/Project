@@ -39,7 +39,7 @@ const SettingsPopover = ({
   return (
     <div
       ref={popoverRef}
-      className="absolute top-8 right-0 w-64 rounded-lg shadow-xl border border-base-300 bg-base-100 z-50"
+      className="absolute top-8 right-0 w-64 rounded-lg shadow-xl border border-base-300 bg-base-100 z-[9999]"
       role="dialog"
       aria-labelledby="settings-heading"
     >

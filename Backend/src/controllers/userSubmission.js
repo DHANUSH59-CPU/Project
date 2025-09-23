@@ -115,6 +115,7 @@ const submitCode = async (req, res) => {
 };
 
 const runCode = async (req, res) => {
+  console.log("API call was made")
   try {
     const userId = req.result._id;
     const problemId = req.params.id;
@@ -158,14 +159,18 @@ const runCode = async (req, res) => {
     const resultToken = submitResult.map((value) => value.token);
 
     const testResult = await submitToken(resultToken);
-    const InformationToSend = testResult.map((test) => ({
-      input: test.stdin,
-      expected: test.expected_output,
-      output: test.stdout.trim(),
-      status: test.status.description,
+    const InformationToSend = testResult.map((test, index) => ({
+      input: test.stdin || problem.visibleTestCases[index]?.input || "",
+      expected: test.expected_output || problem.visibleTestCases[index]?.output || "",
+      output: test.stdout ? test.stdout.trim() : (test.stderr ? test.stderr.trim() : ""),
+      status: test.status?.description || "Unknown",
+      passed: test.status_id === 3, // 3 means accepted in Judge0
+      error: test.stderr ? test.stderr.trim() : null,
+      time: test.time || "0",
+      memory: test.memory || "0"
     }));
 
-    return res.status(200).send(InformationToSend);
+    return res.status(200).json(InformationToSend);
   } catch (err) {
     console.log("Error Found : ", err.message);
     return res.status(500).json({ success: false, message: err.message });
