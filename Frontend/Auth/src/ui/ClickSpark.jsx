@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from "react";
+
 const ClickSpark = ({
-  sparkColor = "#ffff00",
+  sparkColor = "#fff",
   sparkSize = 10,
   sparkRadius = 15,
   sparkCount = 8,
@@ -89,14 +90,12 @@ const ClickSpark = ({
 
         const x1 = spark.x + distance * Math.cos(spark.angle);
         const y1 = spark.y + distance * Math.sin(spark.angle);
-
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
         ctx.strokeStyle = sparkColor;
         ctx.lineWidth = 2;
         ctx.beginPath();
-
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.stroke();
@@ -141,10 +140,26 @@ const ClickSpark = ({
   };
 
   return (
-    <div className="relative w-full h-full" onClick={handleClick}>
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+      }}
+      onClick={handleClick}
+    >
       <canvas
         ref={canvasRef}
-        className="w-full h-full block absolute z-50 top-0 left-0 select-none pointer-events-none"
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "block",
+          userSelect: "none",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          pointerEvents: "none",
+        }}
       />
       {children}
     </div>

@@ -140,7 +140,7 @@ const Timer = ({ isTimerRunning, setIsTimerRunning }) => {
 
       {/* Dropdown menu */}
       {open && (
-        <div className="absolute right-0 mt-2 w-72 bg-base-100 rounded-lg shadow-xl border border-base-300 p-4 z-50">
+        <div className="absolute right-0 mt-2 w-72 bg-base-100 rounded-lg shadow-xl border border-base-300 p-4 z-[10003]">
           {/* Mode switch */}
           <div className="flex justify-between mb-4">
             <button
