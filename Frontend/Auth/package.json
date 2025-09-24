@@ -19,6 +19,7 @@
     "framer-motion": "^12.23.15",
     "lucide-react": "^0.544.0",
     "monaco-editor": "^0.53.0",
+    "postprocessing": "^6.37.8",
     "react": "^19.1.1",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.1.1",
@@ -29,6 +30,7 @@
     "react-router-dom": "^7.9.1",
     "react-use": "^17.6.0",
     "tailwindcss": "^4.1.13",
+    "three": "^0.155.0",
     "vite-plugin-pwa": "^1.0.3",
     "workbox-window": "^7.3.0",
     "zod": "^4.1.8"

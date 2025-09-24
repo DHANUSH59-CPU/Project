@@ -8,7 +8,7 @@ const Hero = () => {
   return (
     <>
       {/* Hero Section */}
-      <div className="hero bg-base-200 min-h-screen">
+      <div className="hero min-h-screen">
         <div className="hero-content text-center">
           <motion.div
             className="max-w-md"
@@ -16,13 +16,15 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl font-bold">Welcome to CodeAI</h1>
-            <p className="py-6">
+            <h1 className="text-6xl font-bold text-white drop-shadow-2xl mb-6">
+              Welcome to CodeAI
+            </h1>
+            <p className="py-6 text-xl text-white/90 drop-shadow-lg">
               Join CodeAI to practice coding, compete with peers, and elevate
               your problem-solving abilities to new heights.
             </p>
             <motion.button
-              className="btn btn-primary"
+              className="btn btn-primary btn-lg text-lg px-8 py-3 shadow-2xl"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => navigate("/problems")}
