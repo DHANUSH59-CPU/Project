@@ -19,7 +19,9 @@ function DeleteProblem() {
       setProblems(response.data);
     } catch (error) {
       alert(
-        `Error fetching problems: ${error.response?.data?.message || error.message}`
+        `Error fetching problems: ${
+          error.response?.data?.message || error.message
+        }`
       );
     } finally {
       setLoading(false);
@@ -27,17 +29,25 @@ function DeleteProblem() {
   };
 
   const handleDelete = async (problemId, problemTitle) => {
-    if (!window.confirm(`Are you sure you want to delete "${problemTitle}"? This action cannot be undone.`)) {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete "${problemTitle}"? This action cannot be undone.`
+      )
+    ) {
       return;
     }
 
     try {
       setLoading(true);
       await axiosClient.delete(`/problem/delete/${problemId}`);
-      setProblems(problems.filter(problem => problem._id !== problemId));
+      setProblems(problems.filter((problem) => problem._id !== problemId));
       alert("Problem deleted successfully!");
     } catch (error) {
-      alert(`Error deleting problem: ${error.response?.data?.message || error.message}`);
+      alert(
+        `Error deleting problem: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     } finally {
       setLoading(false);
     }
@@ -136,7 +146,9 @@ function DeleteProblem() {
                 <div className="card-body p-6">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h3 className="card-title text-xl mb-2">{problem.title}</h3>
+                      <h3 className="card-title text-xl mb-2">
+                        {problem.title}
+                      </h3>
                       <p className="text-base-content/70 text-sm line-clamp-2 mb-4">
                         {problem.description}
                       </p>
@@ -148,7 +160,11 @@ function DeleteProblem() {
                         >
                           {problem.difficulty.toUpperCase()}
                         </span>
-                        <span className={`badge badge-lg ${getTagColor(problem.tags)}`}>
+                        <span
+                          className={`badge badge-lg ${getTagColor(
+                            problem.tags
+                          )}`}
+                        >
                           {problem.tags}
                         </span>
                       </div>
