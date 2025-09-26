@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../store/authSlice";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 // Zod Schema (validations)
 const signupScheme = z.object({
@@ -151,6 +152,12 @@ const SignUp = () => {
               >
                 {isSubmitting ? "submitting" : "Sign Up"}
               </button>
+              
+              {/* Divider */}
+              <div className="divider">OR</div>
+              
+              {/* Google Login Button */}
+              <GoogleLoginButton className="w-full" />
             </fieldset>
           </div>
         </form>

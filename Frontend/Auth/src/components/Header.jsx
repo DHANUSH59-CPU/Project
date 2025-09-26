@@ -1,18 +1,21 @@
-import React from "react";
-import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
-import { useTheme } from "../context/ThemeContext";
 import StarBorder from "../ui/StarBorder";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.authSlice);
-  const { theme, changeTheme, availableThemes } = useTheme();
+
+  const { user } = useSelector((state) => state.authSlice);
 
   return (
-    <div className="navbar bg-base-100 shadow-2xl relative z-50">
+    <div className="navbar bg-base-100/20 backdrop-blur-md shadow-2xl relative z-50">
       <div className="flex-1">
-        <StarBorder as="div" className="inline-block rounded-lg" color="cyan" speed="3s">
+        <StarBorder
+          as="div"
+          className="inline-block rounded-lg"
+          color="cyan"
+          speed="3s"
+        >
           <Link className="btn btn-ghost text-xl" to={"/"}>
             CodeAI
           </Link>
@@ -20,48 +23,25 @@ const Header = () => {
       </div>
 
       <div>
-        <StarBorder as="div" className="inline-block rounded-lg m-1" color="blue" speed="4s">
+        <StarBorder
+          as="div"
+          className="inline-block rounded-lg m-1 mx-2"
+          color="blue"
+          speed="4s"
+        >
           <Link role="button" className="btn" to="/problems">
             Problems
           </Link>
         </StarBorder>
       </div>
-      <div className="dropdown mx-4">
-        <StarBorder as="div" className="inline-block rounded-lg" color="purple" speed="5s">
-          <div tabIndex={0} role="button" className="btn m-1">
-            Theme
-            <svg
-              width="12px"
-              height="12px"
-              className="inline-block h-2 w-2 fill-current opacity-60"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 2048 2048"
-            >
-              <path d="M1799 349l242 241-1017 1017L7 590l242-241 775 775 775-775z"></path>
-            </svg>
-          </div>
-        </StarBorder>
-        <ul
-          tabIndex={0}
-          className="dropdown-content bg-base-300 rounded-box z-[60] w-40 p-2 shadow-2xl"
-        >
-          {availableThemes.map((themeName) => (
-            <li key={themeName}>
-              <input
-                type="radio"
-                name="theme-dropdown"
-                className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-                aria-label={themeName}
-                value={themeName}
-                checked={theme === themeName}
-                onChange={() => changeTheme(themeName)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+
       <div className="dropdown dropdown-end">
-        <StarBorder as="div" className="inline-block rounded-full" color="pink" speed="6s">
+        <StarBorder
+          as="div"
+          className="inline-block rounded-full"
+          color="pink"
+          speed="6s"
+        >
           <div
             tabIndex={0}
             role="button"
@@ -85,9 +65,11 @@ const Header = () => {
               <span className="badge">New</span>
             </a>
           </li>
-          <li>
-            <a>Settings</a>
-          </li>
+          {user?.role === "admin" && (
+            <li>
+              <a onClick={() => navigate("/admin")}>Admin</a>
+            </li>
+          )}
           <li>
             <a onClick={() => navigate("/logout")}>Logout</a>
           </li>

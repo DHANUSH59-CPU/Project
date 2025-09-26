@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <div className="relative min-h-screen w-full">
       {/* Background Animation - Full viewport coverage */}
-      <div className="fixed inset-0 z-0 w-screen h-screen" id="lights">
+      <div className="fixed inset-0 z-0 w-full h-full overflow-hidden" id="lights">
         <Hyperspeed
           effectOptions={{
             onSpeedUp: () => {},

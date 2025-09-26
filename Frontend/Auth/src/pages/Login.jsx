@@ -5,6 +5,7 @@ import * as z from "zod";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/authSlice";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 const loginSchema = z.object({
   emailId: z.string().email({ message: "Invalid Email" }),
@@ -98,6 +99,12 @@ const Login = () => {
                 )}
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
+              
+              {/* Divider */}
+              <div className="divider">OR</div>
+              
+              {/* Google Login Button */}
+              <GoogleLoginButton className="w-full" />
             </fieldset>
           </div>
         </form>

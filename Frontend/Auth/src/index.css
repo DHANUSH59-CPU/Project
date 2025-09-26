@@ -2,8 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @plugin "daisyui" {
-  themes: dark --default, light --prefersdark, retro, valentine, aqua, coffee,
-    forest;
+  themes: dark --default;
 }
 
 #lights {

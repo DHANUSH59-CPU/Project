@@ -22,8 +22,11 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (credentials, { rejectWithValue }) => {
     try {
+      // Check if it's Google authentication
+      const endpoint = credentials.isGoogleAuth ? "/user/google-auth" : "/user/login";
+      
       // making login request to backend
-      const response = await axiosClient.post("/user/login", credentials);
+      const response = await axiosClient.post(endpoint, credentials);
       return response.data.user;
     } catch (error) {
       return rejectWithValue(

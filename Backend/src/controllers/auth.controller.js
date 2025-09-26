@@ -4,6 +4,7 @@ const redisClient = require("../config/redis");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
 
 const {
   generateTokenAndSetCookie,
@@ -323,6 +324,97 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+// Google Authentication
+const googleAuth = async (req, res) => {
+  try {
+    const { googleToken, authType } = req.body;
+
+    if (!googleToken || authType !== 'google') {
+      return res.status(400).json({
+        success: false,
+        message: "Google token is required"
+      });
+    }
+
+    // Initialize Google OAuth2 client
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+    // Verify the Google token
+    const ticket = await client.verifyIdToken({
+      idToken: googleToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { email, given_name, family_name, picture, email_verified } = payload;
+
+    if (!email_verified) {
+      return res.status(400).json({
+        success: false,
+        message: "Google email not verified"
+      });
+    }
+
+    // Check if user already exists
+    let user = await User.findOne({ emailId: email });
+
+    if (user) {
+      // User exists, log them in
+      generateTokenAndSetCookie(res, user._id, user.role);
+      user.lastLogin = new Date();
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Logged in successfully with Google",
+        user: { ...user._doc, password: undefined }
+      });
+    } else {
+      // User doesn't exist, create new account
+      const newUser = new User({
+        emailId: email,
+        firstName: given_name || email.split('@')[0],
+        lastName: family_name || '',
+        profileImageUrl: picture || '',
+        isVerified: true, // Google accounts are pre-verified
+        role: "user",
+        authProvider: "google",
+        // No password needed for Google auth users
+        password: await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10) // Random password
+      });
+
+      await newUser.save();
+
+      // Generate token and set cookie
+      generateTokenAndSetCookie(res, newUser._id, newUser.role);
+
+      // Send welcome email (optional)
+      // await sendWelcomeEmail(newUser.emailId, newUser.firstName);
+
+      return res.status(201).json({
+        success: true,
+        message: "Account created and logged in successfully with Google",
+        user: { ...newUser._doc, password: undefined }
+      });
+    }
+
+  } catch (error) {
+    console.error("Google authentication error:", error);
+    
+    if (error.message.includes('Token used too late') || error.message.includes('Invalid token')) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired Google token"
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Google authentication failed"
+    });
+  }
+};
+
 module.exports = {
   signup,
   verifyEmail,
@@ -333,4 +425,5 @@ module.exports = {
   checkAuth,
   adminRegister,
   deleteProfile,
+  googleAuth,
 };

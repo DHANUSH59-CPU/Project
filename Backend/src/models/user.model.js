@@ -11,13 +11,22 @@ const userScheme = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      minLength: 3,
+      minLength: 1,
       maxLength: 20,
       trim: true,
     },
     profile_img: {
       type: String,
       trim: true,
+    },
+    profileImageUrl: {
+      type: String,
+      trim: true,
+    },
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
     },
 
     emailId: {

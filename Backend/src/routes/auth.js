@@ -10,6 +10,7 @@ const {
   checkAuth,
   adminRegister,
   deleteProfile,
+  googleAuth,
 } = require("../controllers/auth.controller");
 
 const userMiddleware = require("../middleware/userMiddleware");
@@ -24,6 +25,7 @@ authRouter.get("/check-auth", verifyToken, checkAuth); // Will be checked whenev
 authRouter.post("/signup", signup);
 authRouter.post("/verify-email", verifyEmail);
 authRouter.post("/login", loginLimiter, login);
+authRouter.post("/google-auth", googleAuth); // New Google authentication route
 authRouter.post("/logout", userMiddleware, logout);
 authRouter.post("/admin/register", adminMiddleware, adminRegister);
 authRouter.delete("/profile", userMiddleware, deleteProfile);
