@@ -232,7 +232,7 @@ const fetchProblemById = async (req, res) => {
     }
 
     const fetchProblem = await Problem.findById(id).select(
-      "_id title description difficulty tags visibleTestCases startCode referenceSolution"
+      "_id title description difficulty tags visibleTestCases hiddenTestCases startCode referenceSolution"
     );
 
     if (!fetchProblem) {

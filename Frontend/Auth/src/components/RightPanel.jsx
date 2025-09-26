@@ -271,73 +271,92 @@ const RightPanel = ({
         </div>
 
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {testResultsLoading ? (
-            <button
-              className="group relative px-3 sm:px-4 py-1.5 text-xs font-medium bg-success/70 text-white rounded-md cursor-not-allowed overflow-hidden"
-              disabled
-            >
-              <div className="flex items-center space-x-1.5 sm:space-x-2">
-                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                <span className="hidden sm:inline">Running...</span>
-                <span className="sm:hidden">Run</span>
-              </div>
-            </button>
-          ) : (
-            <button
-              onClick={handleRun}
-              className="group relative px-4 py-1.5 text-xs font-medium bg-success text-white rounded-md hover:bg-success/90 active:bg-success/80 transition-all duration-200 hover:shadow-lg hover:shadow-success/25 transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              <div className="flex items-center space-x-1.5">
-                <svg
-                  className="w-3 h-3 transition-transform group-hover:scale-110"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          {/* Hide Run/Submit buttons when submission result is showing */}
+          {!showSubmissionResult && (
+            <>
+              {testResultsLoading ? (
+                <button
+                  className="group relative px-3 sm:px-4 py-1.5 text-xs font-medium bg-success/70 text-white rounded-md cursor-not-allowed overflow-hidden"
+                  disabled
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m2-10v18a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2h8l4 4z"
-                  />
-                </svg>
-                <span>Run</span>
-              </div>
-            </button>
+                  <div className="flex items-center space-x-1.5 sm:space-x-2">
+                    <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span className="hidden sm:inline">Running...</span>
+                    <span className="sm:hidden">Run</span>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={handleRun}
+                  className="group relative px-4 py-1.5 text-xs font-medium bg-success text-white rounded-md hover:bg-success/90 active:bg-success/80 transition-all duration-200 hover:shadow-lg hover:shadow-success/25 transform hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  <div className="flex items-center space-x-1.5">
+                    <svg
+                      className="w-3 h-3 transition-transform group-hover:scale-110"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m2-10v18a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2h8l4 4z"
+                      />
+                    </svg>
+                    <span>Run</span>
+                  </div>
+                </button>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                className="group relative px-4 py-1.5 text-xs font-medium bg-primary text-white rounded-md hover:bg-primary/90 active:bg-primary/80 transition-all duration-200 hover:shadow-lg hover:shadow-primary/25 transform hover:-translate-y-0.5 active:translate-y-0"
+              >
+                <div className="flex items-center space-x-1.5">
+                  <svg
+                    className="w-3 h-3 transition-transform group-hover:scale-110"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                    />
+                  </svg>
+                  <span>Submit</span>
+                </div>
+              </button>
+            </>
           )}
 
-          {showSubmissionResult && !submissionResult ? (
-            <button
-              className="group relative px-4 py-1.5 text-xs font-medium bg-primary/70 text-white rounded-md cursor-not-allowed overflow-hidden"
-              disabled
-            >
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                <span>Submitting...</span>
-              </div>
-            </button>
-          ) : (
-            <button
-              onClick={handleSubmit}
-              className="group relative px-4 py-1.5 text-xs font-medium bg-primary text-white rounded-md hover:bg-primary/90 active:bg-primary/80 transition-all duration-200 hover:shadow-lg hover:shadow-primary/25 transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              <div className="flex items-center space-x-1.5">
-                <svg
-                  className="w-3 h-3 transition-transform group-hover:scale-110"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                  />
-                </svg>
-                <span>Submit</span>
-              </div>
-            </button>
+          {/* Show submission status when submitting */}
+          {showSubmissionResult && !submissionResult && (
+            <div className="flex items-center space-x-2 px-4 py-1.5 text-xs font-medium bg-primary/20 text-primary rounded-md">
+              <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+              <span>Submitting...</span>
+            </div>
+          )}
+
+          {/* Show result status when submission is complete */}
+          {showSubmissionResult && submissionResult && (
+            <div className={`flex items-center space-x-2 px-4 py-1.5 text-xs font-medium rounded-md ${
+              submissionResult.accepted 
+                ? 'bg-success/20 text-success' 
+                : 'bg-error/20 text-error'
+            }`}>
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {submissionResult.accepted ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                )}
+              </svg>
+              <span>{submissionResult.accepted ? 'Accepted' : 'Wrong Answer'}</span>
+            </div>
           )}
 
           <div className="relative z-[10000]">

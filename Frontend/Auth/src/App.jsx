@@ -11,8 +11,10 @@ import Loading from "./components/Loading";
 import { Navigate } from "react-router-dom";
 import Logout from "./pages/Logout";
 import ProblemsArena from "./pages/ProblemsArena";
-import Admin from "./components/adminPanel/admin";
+import Admin from "./components/adminPanel/Admin";
 import AdminPanel from "./components/adminPanel/AdminPanel";
+import UpdateProblem from "./components/adminPanel/UpdateProblem";
+import UpdateProblemTest from "./components/adminPanel/UpdateProblemTest";
 import ProblemSolvingPage from "./components/ProblemSolvingPage";
 
 export default function App() {
@@ -66,6 +68,16 @@ export default function App() {
                 element={
                   isAuthenticated && user.role === "admin" ? (
                     <AdminPanel />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/admin/update"
+                element={
+                  isAuthenticated && user?.role === "admin" ? (
+                    <UpdateProblem />
                   ) : (
                     <Navigate to="/" />
                   )
