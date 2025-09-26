@@ -46,7 +46,6 @@ const problemSchema = z.object({
 });
 
 function UpdateProblem() {
-  console.log("UpdateProblem component is rendering");
   const navigate = useNavigate();
   const [problems, setProblems] = useState([]);
   const [selectedProblem, setSelectedProblem] = useState(null);
@@ -83,29 +82,17 @@ function UpdateProblem() {
     name: "hiddenTestCases",
   });
 
-  // Debug field array changes
-  useEffect(() => {
-    console.log("👀 Field arrays updated:");
-    console.log("Visible fields:", visibleFields.length, visibleFields);
-    console.log("Hidden fields:", hiddenFields.length, hiddenFields);
-  }, [visibleFields, hiddenFields]);
-
   // Fetch all problems on component mount
   useEffect(() => {
-    console.log("UpdateProblem component mounted");
     fetchAllProblems();
   }, []);
 
   const fetchAllProblems = async () => {
     try {
-      console.log("Fetching all problems...");
       setLoading(true);
       const response = await axiosClient.get("/problem/allProblems");
-      console.log("Problems fetched successfully:", response.data);
       setProblems(response.data);
     } catch (error) {
-      console.error("Error fetching problems:", error);
-      console.error("Error details:", error.response?.data);
       alert(
         `Error fetching problems: ${
           error.response?.data?.message || error.message
@@ -118,14 +105,11 @@ function UpdateProblem() {
 
   const fetchProblemDetails = async (problemId) => {
     try {
-      console.log("Fetching problem details for ID:", problemId);
       setLoading(true);
       const response = await axiosClient.get(
         `/problem/problemById/${problemId}`
       );
       const problem = response.data;
-      console.log("Problem details fetched:", problem);
-
       setSelectedProblem(problem);
 
       // First, reset the basic form fields
@@ -175,14 +159,7 @@ function UpdateProblem() {
       hiddenTestCases.forEach((testCase) => {
         appendHidden(testCase);
       });
-
-      console.log("✅ Form populated with:", {
-        visibleCount: visibleTestCases.length,
-        hiddenCount: hiddenTestCases.length,
-      });
     } catch (error) {
-      console.error("Error fetching problem details:", error);
-      console.error("Error details:", error.response?.data);
       alert(
         `Error fetching problem details: ${
           error.response?.data?.message || error.message
@@ -221,17 +198,7 @@ function UpdateProblem() {
 
     try {
       setIsUpdating(true);
-      console.log(
-        "📡 Making PUT request to:",
-        `/problem/update/${selectedProblem._id}`
-      );
-
-      const response = await axiosClient.put(
-        `/problem/update/${selectedProblem._id}`,
-        data
-      );
-      console.log("✅ API Response:", response.data);
-
+      await axiosClient.put(`/problem/update/${selectedProblem._id}`, data);
       alert("Problem updated successfully!");
 
       // Reset form and go back to problem selection
@@ -239,12 +206,9 @@ function UpdateProblem() {
       reset();
       fetchAllProblems(); // Refresh the problems list
     } catch (error) {
-      console.error("❌ API Error:", error);
-      console.error("📄 Error response:", error.response?.data);
       alert(`Error: ${error.response?.data?.message || error.message}`);
     } finally {
       setIsUpdating(false);
-      console.log("🏁 Update process finished");
     }
   };
 

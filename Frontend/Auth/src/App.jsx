@@ -15,6 +15,7 @@ import Admin from "./components/adminPanel/Admin";
 import AdminPanel from "./components/adminPanel/AdminPanel";
 import UpdateProblem from "./components/adminPanel/UpdateProblem";
 import UpdateProblemTest from "./components/adminPanel/UpdateProblemTest";
+import DeleteProblem from "./components/adminPanel/DeleteProblem";
 import ProblemSolvingPage from "./components/ProblemSolvingPage";
 
 export default function App() {
@@ -78,6 +79,16 @@ export default function App() {
                 element={
                   isAuthenticated && user?.role === "admin" ? (
                     <UpdateProblem />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+              <Route
+                path="/admin/delete"
+                element={
+                  isAuthenticated && user?.role === "admin" ? (
+                    <DeleteProblem />
                   ) : (
                     <Navigate to="/" />
                   )
