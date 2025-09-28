@@ -159,16 +159,23 @@ const ProblemSolvingPage = () => {
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <Timer 
-            isTimerRunning={isTimerRunning} 
-            setIsTimerRunning={setIsTimerRunning} 
+          <Timer
+            isTimerRunning={isTimerRunning}
+            setIsTimerRunning={setIsTimerRunning}
           />
-          <button 
-            className="btn btn-ghost btn-sm"
-            title="Fullscreen"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          <button className="btn btn-ghost btn-sm" title="Fullscreen">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
+              />
             </svg>
           </button>
         </div>
@@ -184,8 +191,9 @@ const ProblemSolvingPage = () => {
           style={{ width: `${leftPanelWidth}px` }}
           className="h-full overflow-hidden flex-shrink-0 bg-base-100"
         >
-          <LeftPanel 
+          <LeftPanel
             problem={problem}
+            code={code}
             submissionResult={submissionResult}
             showSubmissionResult={showSubmissionResult}
             setShowSubmissionResult={setShowSubmissionResult}
@@ -204,9 +212,9 @@ const ProblemSolvingPage = () => {
 
         {/* Right Panel - Code Editor */}
         <div className="flex-grow h-full overflow-hidden bg-base-100">
-          <RightPanel 
-            code={code} 
-            setCode={setCode} 
+          <RightPanel
+            code={code}
+            setCode={setCode}
             problem={problem}
             submissionResult={submissionResult}
             setSubmissionResult={setSubmissionResult}

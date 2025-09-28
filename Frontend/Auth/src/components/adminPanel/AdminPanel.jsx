@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -46,6 +47,7 @@ const problemSchema = z.object({
 
 function AdminPanel() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     control,
@@ -86,12 +88,15 @@ function AdminPanel() {
   });
 
   const onSubmit = async (data) => {
+    setIsSubmitting(true);
     try {
       await axiosClient.post("/problem/create", data);
       alert("Problem created successfully!");
       navigate("/");
     } catch (error) {
       alert(`Error: ${error.response?.data?.message || error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -261,7 +266,9 @@ function AdminPanel() {
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text font-medium">Input</span>
-                      <span className="label-text-alt text-xs opacity-70">Multi-line supported</span>
+                      <span className="label-text-alt text-xs opacity-70">
+                        Multi-line supported
+                      </span>
                     </label>
                     <textarea
                       {...register(`visibleTestCases.${index}.input`)}
@@ -275,7 +282,9 @@ function AdminPanel() {
                       <span className="label-text font-medium">
                         Expected Output
                       </span>
-                      <span className="label-text-alt text-xs opacity-70">Single or multi-line</span>
+                      <span className="label-text-alt text-xs opacity-70">
+                        Single or multi-line
+                      </span>
                     </label>
                     <textarea
                       {...register(`visibleTestCases.${index}.output`)}
@@ -345,7 +354,9 @@ function AdminPanel() {
                   <div className="form-control">
                     <label className="label">
                       <span className="label-text font-medium">Input</span>
-                      <span className="label-text-alt text-xs opacity-70">Multi-line supported</span>
+                      <span className="label-text-alt text-xs opacity-70">
+                        Multi-line supported
+                      </span>
                     </label>
                     <textarea
                       {...register(`hiddenTestCases.${index}.input`)}
@@ -359,7 +370,9 @@ function AdminPanel() {
                       <span className="label-text font-medium">
                         Expected Output
                       </span>
-                      <span className="label-text-alt text-xs opacity-70">Single or multi-line</span>
+                      <span className="label-text-alt text-xs opacity-70">
+                        Single or multi-line
+                      </span>
                     </label>
                     <textarea
                       {...register(`hiddenTestCases.${index}.output`)}
@@ -451,13 +464,29 @@ function AdminPanel() {
             </h3>
             <button
               type="submit"
-              className="btn btn-primary btn-lg w-full max-w-md mx-auto hover:scale-105 transition-transform duration-200 shadow-lg"
+              disabled={isSubmitting}
+              className={`btn btn-primary btn-lg w-full max-w-md mx-auto transition-transform duration-200 shadow-lg ${
+                isSubmitting
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:scale-105"
+              }`}
             >
-              <span className="text-lg">🚀</span>
-              Create Problem
+              {isSubmitting ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Creating Problem...
+                </>
+              ) : (
+                <>
+                  <span className="text-lg">🚀</span>
+                  Create Problem
+                </>
+              )}
             </button>
             <p className="text-sm opacity-70 mt-2">
-              Make sure all fields are filled correctly
+              {isSubmitting
+                ? "Please wait while we create your problem..."
+                : "Make sure all fields are filled correctly"}
             </p>
           </div>
         </div>

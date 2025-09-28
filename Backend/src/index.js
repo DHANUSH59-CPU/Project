@@ -11,6 +11,7 @@ const redisClient = require("./config/redis");
 const { authRouter } = require("./routes/auth");
 const { problemRouter } = require("./routes/problemRouter");
 const { submitRouter } = require("./routes/submissionRouter");
+const { aiRouter } = require("./routes/ai");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use(
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);
+app.use("/ai", aiRouter);
 
 const InitizializeConnection = async () => {
   try {
