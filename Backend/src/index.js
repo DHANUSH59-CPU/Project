@@ -12,6 +12,10 @@ const { authRouter } = require("./routes/auth");
 const { problemRouter } = require("./routes/problemRouter");
 const { submitRouter } = require("./routes/submissionRouter");
 const { aiRouter } = require("./routes/ai");
+const { leaderboardRouter } = require("./routes/leaderboard");
+const { sprintRouter } = require("./routes/sprint");
+const { profileRouter } = require("./routes/profile");
+const { activityRouter } = require("./routes/activity");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -35,6 +39,10 @@ app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);
 app.use("/ai", aiRouter);
+app.use("/leaderboard", leaderboardRouter);
+app.use("/sprint", sprintRouter);
+app.use("/profile", profileRouter);
+app.use("/activity", activityRouter);
 
 const InitizializeConnection = async () => {
   try {

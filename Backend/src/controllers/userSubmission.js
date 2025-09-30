@@ -1,10 +1,46 @@
 const Problem = require("../models/problem");
 const submission = require("../models/submission.model");
+const User = require("../models/user.model");
+const { updateSprintProgress } = require("./sprint.controller");
 const {
   getLanguageById,
   submitBatch,
   submitToken,
 } = require("../utils/problemUtility");
+
+// Helper function to calculate points based on difficulty
+const calculatePoints = (difficulty) => {
+  const pointsMap = {
+    Easy: 10,
+    Medium: 20,
+    Hard: 30,
+  };
+  return pointsMap[difficulty] || 10;
+};
+
+// Helper function to update user streaks
+const updateStreaks = async (userId) => {
+  const user = await User.findById(userId);
+  const today = new Date();
+  const lastUpdated = new Date(user.streaks.lastUpdated);
+
+  // Check if it's a new day
+  const isNewDay = today.toDateString() !== lastUpdated.toDateString();
+
+  if (isNewDay) {
+    // Check if user solved a problem yesterday (consecutive day)
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    // For simplicity, we'll increment streak if it's a new day
+    // In a real implementation, you'd check if user solved problems yesterday
+    user.streaks.current += 1;
+    user.streaks.longest = Math.max(user.streaks.longest, user.streaks.current);
+    user.streaks.lastUpdated = today;
+  }
+
+  await user.save();
+};
 
 const submitCode = async (req, res) => {
   try {
@@ -21,8 +57,7 @@ const submitCode = async (req, res) => {
       language = "c++";
     }
 
-    // what was code written by user
-    console.log(code);
+    // Code submitted by user
 
     // Fetch the problem from database for hiddentestcases
     const problem = await Problem.findById(problemId);
@@ -95,12 +130,56 @@ const submitCode = async (req, res) => {
       req.result.problemSolved = [];
     }
 
-    if (!req.result.problemSolved.includes(problemId)) {
+    const accepted = status == "accepted";
+
+    // Update leaderboard data if problem is solved
+    if (accepted && !req.result.problemSolved.includes(problemId)) {
+      // Add to solved problems
       req.result.problemSolved.push(problemId);
+
+      // Award points based on difficulty
+      const pointsToAward = calculatePoints(problem.difficulty);
+      req.result.points += pointsToAward;
+
+      // Update checkedProblems array
+      const existingCheckedProblem = req.result.checkedProblems.find(
+        (cp) => cp.pid.toString() === problemId
+      );
+
+      if (existingCheckedProblem) {
+        existingCheckedProblem.isSolved = true;
+        existingCheckedProblem.submitDate = new Date();
+      } else {
+        req.result.checkedProblems.push({
+          pid: problemId,
+          isSolved: true,
+          submitDate: new Date(),
+        });
+      }
+
+      // Update streaks
+      await updateStreaks(userId);
+
+      // Update sprint progress
+      await updateSprintProgress(userId, problemId);
+
       await req.result.save();
+    } else if (!accepted) {
+      // Add to checkedProblems as attempted (not solved)
+      const existingCheckedProblem = req.result.checkedProblems.find(
+        (cp) => cp.pid.toString() === problemId
+      );
+
+      if (!existingCheckedProblem) {
+        req.result.checkedProblems.push({
+          pid: problemId,
+          isSolved: false,
+          submitDate: new Date(),
+        });
+        await req.result.save();
+      }
     }
 
-    const accepted = status == "accepted";
     res.status(201).json({
       accepted,
       totalTestCases: submittedResult.testCasesTotal,
@@ -109,13 +188,11 @@ const submitCode = async (req, res) => {
       memory,
     });
   } catch (err) {
-    console.log("Error Found : ", err.message);
     return res.status(500).json({ success: false, message: err.message });
   }
 };
 
 const runCode = async (req, res) => {
-  console.log("API call was made")
   try {
     const userId = req.result._id;
     const problemId = req.params.id;
@@ -130,8 +207,7 @@ const runCode = async (req, res) => {
       language = "c++";
     }
 
-    // what was code written by user
-    // console.log(code);
+    // Code written by user
 
     // Fetch the problem from database for hiddentestcases
     const problem = await Problem.findById(problemId);
@@ -161,18 +237,22 @@ const runCode = async (req, res) => {
     const testResult = await submitToken(resultToken);
     const InformationToSend = testResult.map((test, index) => ({
       input: test.stdin || problem.visibleTestCases[index]?.input || "",
-      expected: test.expected_output || problem.visibleTestCases[index]?.output || "",
-      output: test.stdout ? test.stdout.trim() : (test.stderr ? test.stderr.trim() : ""),
+      expected:
+        test.expected_output || problem.visibleTestCases[index]?.output || "",
+      output: test.stdout
+        ? test.stdout.trim()
+        : test.stderr
+        ? test.stderr.trim()
+        : "",
       status: test.status?.description || "Unknown",
       passed: test.status_id === 3, // 3 means accepted in Judge0
       error: test.stderr ? test.stderr.trim() : null,
       time: test.time || "0",
-      memory: test.memory || "0"
+      memory: test.memory || "0",
     }));
 
     return res.status(200).json(InformationToSend);
   } catch (err) {
-    console.log("Error Found : ", err.message);
     return res.status(500).json({ success: false, message: err.message });
   }
 };

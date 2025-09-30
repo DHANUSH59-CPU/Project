@@ -5,13 +5,6 @@ const chatAI = async (req, res) => {
   try {
     const { problemDetails, userSolution, chatHistory } = req.body;
 
-    console.log("Received request:", {
-      problemDetails: !!problemDetails,
-      userSolution: !!userSolution,
-      chatHistory: !!chatHistory,
-      chatHistoryLength: chatHistory?.length,
-    });
-
     if (!problemDetails) {
       return res.status(400).send({ error: "Missing problemDetails" });
     }
@@ -31,8 +24,6 @@ const chatAI = async (req, res) => {
       parts: chat.parts,
     }));
 
-    console.log("Formatted history:", formattedHistory);
-
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: formattedHistory,
@@ -47,13 +38,6 @@ const chatAI = async (req, res) => {
 
     res.status(201).send(response.text);
   } catch (error) {
-    console.error("AI Chat Error:", error);
-    console.error("Error details:", {
-      message: error.message,
-      status: error.status,
-      code: error.code,
-      stack: error.stack,
-    });
     res.status(500).send({
       error: error.message,
       details: error.status || error.code || "Unknown error",

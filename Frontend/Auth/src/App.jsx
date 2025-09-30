@@ -16,7 +16,13 @@ import AdminPanel from "./components/adminPanel/AdminPanel";
 import UpdateProblem from "./components/adminPanel/UpdateProblem";
 import UpdateProblemTest from "./components/adminPanel/UpdateProblemTest";
 import DeleteProblem from "./components/adminPanel/DeleteProblem";
+import SprintManagement from "./components/adminPanel/SprintManagement";
 import ProblemSolvingPage from "./components/ProblemSolvingPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
+import SprintsPage from "./pages/SprintsPage";
+import SprintDetailPage from "./pages/SprintDetailPage";
+import SprintProgressPage from "./pages/SprintProgressPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 export default function App() {
   const { isAuthenticated, loading, user } = useSelector(
@@ -53,6 +59,18 @@ export default function App() {
               <Route
                 path="/problems"
                 element={isAuthenticated ? <ProblemsArena /> : <Login />}
+              />
+              <Route
+                path="/leaderboard"
+                element={isAuthenticated ? <LeaderboardPage /> : <Login />}
+              />
+              <Route
+                path="/sprints"
+                element={isAuthenticated ? <SprintsPage /> : <Login />}
+              />
+              <Route
+                path="/profile"
+                element={isAuthenticated ? <UserProfilePage /> : <Login />}
               />
               <Route
                 path="/admin"
@@ -94,10 +112,28 @@ export default function App() {
                   )
                 }
               />
+              <Route
+                path="/admin/sprints"
+                element={
+                  isAuthenticated && user?.role === "admin" ? (
+                    <SprintManagement />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
             </Route>
             <Route
               path="/problems/:problemId"
               element={isAuthenticated ? <ProblemSolvingPage /> : <Login />}
+            />
+            <Route
+              path="/sprint/:sprintId"
+              element={isAuthenticated ? <SprintDetailPage /> : <Login />}
+            />
+            <Route
+              path="/sprint/:sprintId/progress"
+              element={isAuthenticated ? <SprintProgressPage /> : <Login />}
             />
           </Routes>
         )}

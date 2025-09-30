@@ -69,6 +69,46 @@ const userScheme = new mongoose.Schema(
       ],
       default: [],
     },
+    // Leaderboard fields
+    points: {
+      type: Number,
+      min: 0,
+      default: 0,
+      required: true,
+    },
+    streaks: {
+      current: {
+        type: Number,
+        default: 1,
+        min: 0,
+      },
+      longest: {
+        type: Number,
+        default: 1,
+        min: 0,
+      },
+      lastUpdated: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+    checkedProblems: {
+      type: [
+        {
+          pid: {
+            type: Schema.Types.ObjectId,
+            ref: "problem",
+          },
+          isSolved: {
+            type: Boolean,
+          },
+          submitDate: {
+            type: Date,
+          },
+        },
+      ],
+      default: [],
+    },
     resetPasswordToken: String,
     resetPasswordExpiresAt: Date,
     verificationToken: String,

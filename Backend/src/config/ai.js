@@ -2,7 +2,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // Check if API key is provided
 if (!process.env.GEMINI_API_KEY) {
-  console.error("GEMINI_API_KEY is not set in environment variables");
+  // GEMINI_API_KEY is not set in environment variables
 }
 
 // Initialize Google Generative AI
@@ -12,12 +12,6 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const models = {
   generateContent: async (params) => {
     try {
-      console.log("Generating content with params:", {
-        model: params.model,
-        hasSystemInstruction: !!params.config?.systemInstruction,
-        contentsLength: params.contents?.length,
-      });
-
       const model = genAI.getGenerativeModel({
         model: params.model || "gemini-2.0-flash",
         systemInstruction: params.config?.systemInstruction,
@@ -44,8 +38,6 @@ const models = {
         contentToSend = "Hello";
       }
 
-      console.log("Sending to Gemini:", contentToSend);
-
       const result = await model.generateContent(contentToSend);
       const response = await result.response;
 
@@ -53,12 +45,6 @@ const models = {
         text: response.text(),
       };
     } catch (error) {
-      console.error("Error generating content:", error);
-      console.error("Error details:", {
-        message: error.message,
-        status: error.status,
-        code: error.code,
-      });
       throw error;
     }
   },
