@@ -250,7 +250,7 @@ const fetchAllProblem = async (req, res) => {
 
   try {
     const fetchAllProblem = await Problem.find({}).select(
-      "_id title description difficulty tags"
+      "_id title description difficulty tags likesCount favoritesCount commentsCount"
     );
 
     if (fetchAllProblem.length === 0) {

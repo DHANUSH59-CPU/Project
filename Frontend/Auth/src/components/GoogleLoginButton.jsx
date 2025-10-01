@@ -1,21 +1,22 @@
-import React, { useEffect, useRef } from 'react';
-import useGoogleAuth from '../hooks/useGoogleAuth';
+import React, { useEffect, useRef } from "react";
+import useGoogleAuth from "../hooks/useGoogleAuth";
 
 const GoogleLoginButton = ({ className = "" }) => {
-  const { isGoogleLoaded, renderGoogleButton, signInWithGoogle } = useGoogleAuth();
+  const { isGoogleLoaded, renderGoogleButton, signInWithGoogle } =
+    useGoogleAuth();
   const buttonRef = useRef(null);
-  const googleButtonId = 'google-signin-button';
+  const googleButtonId = "google-signin-button";
 
   useEffect(() => {
     if (isGoogleLoaded && buttonRef.current) {
       // Clear any existing button
-      buttonRef.current.innerHTML = '';
-      
+      buttonRef.current.innerHTML = "";
+
       // Create the Google button container
-      const googleButtonContainer = document.createElement('div');
+      const googleButtonContainer = document.createElement("div");
       googleButtonContainer.id = googleButtonId;
       buttonRef.current.appendChild(googleButtonContainer);
-      
+
       // Render the Google button
       renderGoogleButton(googleButtonId);
     }
@@ -26,7 +27,7 @@ const GoogleLoginButton = ({ className = "" }) => {
     if (isGoogleLoaded) {
       signInWithGoogle();
     } else {
-      console.log('Google services not loaded yet');
+      console.log("Google services not loaded yet");
     }
   };
 
@@ -58,7 +59,7 @@ const GoogleLoginButton = ({ className = "" }) => {
               d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
             />
           </svg>
-          {isGoogleLoaded ? 'Sign in with Google' : 'Loading Google...'}
+          {isGoogleLoaded ? "Sign in with Google" : "Loading Google..."}
         </button>
       )}
     </div>

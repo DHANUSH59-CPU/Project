@@ -221,43 +221,49 @@ const ProblemSolvingPage = () => {
             />
           </div>
 
-          {/* Social Actions */}
-          <SocialActions
-            problemId={problemId}
-            initialLikesCount={problem.likesCount || 0}
-            initialFavoritesCount={problem.favoritesCount || 0}
-            initialCommentsCount={problem.commentsCount || 0}
-          />
-        </div>
-
-        {/* Divider */}
-        <div
-          className="cursor-e-resize bg-base-300 hover:bg-primary transition-colors duration-150 flex-shrink-0"
-          style={{ width: `${dividerActualWidth}px` }}
-          onMouseDown={handleMouseDownOnDivider}
-          role="separator"
-          aria-orientation="vertical"
-          tabIndex={0}
-        />
-
-        {/* Right Panel - Code Editor */}
-        <div className="flex-grow h-full overflow-hidden bg-base-100 flex flex-col">
-          {showComments ? (
-            <div className="flex-1 overflow-hidden">
-              <CommentsSection problemId={problemId} />
-            </div>
-          ) : (
-            <RightPanel
-              code={code}
-              setCode={setCode}
-              problem={problem}
-              submissionResult={submissionResult}
-              setSubmissionResult={setSubmissionResult}
-              showSubmissionResult={showSubmissionResult}
-              setShowSubmissionResult={setShowSubmissionResult}
+          {/* Social Actions - Hide when submission result is shown */}
+          {!showSubmissionResult && (
+            <SocialActions
+              problemId={problemId}
+              initialLikesCount={problem.likesCount || 0}
+              initialFavoritesCount={problem.favoritesCount || 0}
+              initialCommentsCount={problem.commentsCount || 0}
             />
           )}
         </div>
+
+        {/* Divider - Hide when submission result is shown */}
+        {!showSubmissionResult && (
+          <div
+            className="cursor-e-resize bg-base-300 hover:bg-primary transition-colors duration-150 flex-shrink-0"
+            style={{ width: `${dividerActualWidth}px` }}
+            onMouseDown={handleMouseDownOnDivider}
+            role="separator"
+            aria-orientation="vertical"
+            tabIndex={0}
+          />
+        )}
+
+        {/* Right Panel - Code Editor - Hide when submission result is shown */}
+        {!showSubmissionResult && (
+          <div className="flex-grow h-full overflow-hidden bg-base-100 flex flex-col">
+            {showComments ? (
+              <div className="flex-1 overflow-hidden">
+                <CommentsSection problemId={problemId} />
+              </div>
+            ) : (
+              <RightPanel
+                code={code}
+                setCode={setCode}
+                problem={problem}
+                submissionResult={submissionResult}
+                setSubmissionResult={setSubmissionResult}
+                showSubmissionResult={showSubmissionResult}
+                setShowSubmissionResult={setShowSubmissionResult}
+              />
+            )}
+          </div>
+        )}
       </div>
     </main>
   );

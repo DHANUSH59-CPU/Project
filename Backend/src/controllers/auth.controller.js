@@ -1,4 +1,8 @@
 const User = require("../models/user.model");
+const Submission = require("../models/submission.model");
+const Like = require("../models/like.model");
+const Favorite = require("../models/favorite.model");
+const Comment = require("../models/comment.model");
 const redisClient = require("../config/redis");
 
 const jwt = require("jsonwebtoken");
@@ -312,15 +316,35 @@ const adminRegister = async (req, res) => {
 
 const deleteProfile = async (req, res) => {
   try {
-    if (!user) return res.status(404).json({ message: "User not found" });
-    const userId = req.result._id;
-    User.findByIdAndDelete(userId);
+    const userId = req.userId; // Get userId from middleware
 
-    Submission.deleteMany({ userId });
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    res.status(200).send("Deleted Sucessfully");
+    // Delete user submissions first
+    await Submission.deleteMany({ userId });
+
+    // Delete user's social interactions (likes, favorites, comments)
+    await Like.deleteMany({ user: userId });
+    await Favorite.deleteMany({ user: userId });
+    await Comment.deleteMany({ user: userId });
+
+    // Finally delete the user
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    console.error("Delete profile error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
@@ -329,10 +353,10 @@ const googleAuth = async (req, res) => {
   try {
     const { googleToken, authType } = req.body;
 
-    if (!googleToken || authType !== 'google') {
+    if (!googleToken || authType !== "google") {
       return res.status(400).json({
         success: false,
-        message: "Google token is required"
+        message: "Google token is required",
       });
     }
 
@@ -351,7 +375,7 @@ const googleAuth = async (req, res) => {
     if (!email_verified) {
       return res.status(400).json({
         success: false,
-        message: "Google email not verified"
+        message: "Google email not verified",
       });
     }
 
@@ -367,20 +391,20 @@ const googleAuth = async (req, res) => {
       return res.status(200).json({
         success: true,
         message: "Logged in successfully with Google",
-        user: { ...user._doc, password: undefined }
+        user: { ...user._doc, password: undefined },
       });
     } else {
       // User doesn't exist, create new account
       const newUser = new User({
         emailId: email,
-        firstName: given_name || email.split('@')[0],
-        lastName: family_name || '',
-        profileImageUrl: picture || '',
+        firstName: given_name || email.split("@")[0],
+        lastName: family_name || "",
+        profileImageUrl: picture || "",
         isVerified: true, // Google accounts are pre-verified
         role: "user",
         authProvider: "google",
         // No password needed for Google auth users
-        password: await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10) // Random password
+        password: await bcrypt.hash(crypto.randomBytes(32).toString("hex"), 10), // Random password
       });
 
       await newUser.save();
@@ -394,23 +418,25 @@ const googleAuth = async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "Account created and logged in successfully with Google",
-        user: { ...newUser._doc, password: undefined }
+        user: { ...newUser._doc, password: undefined },
       });
     }
-
   } catch (error) {
     console.error("Google authentication error:", error);
-    
-    if (error.message.includes('Token used too late') || error.message.includes('Invalid token')) {
+
+    if (
+      error.message.includes("Token used too late") ||
+      error.message.includes("Invalid token")
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid or expired Google token"
+        message: "Invalid or expired Google token",
       });
     }
 
     return res.status(500).json({
       success: false,
-      message: "Google authentication failed"
+      message: "Google authentication failed",
     });
   }
 };

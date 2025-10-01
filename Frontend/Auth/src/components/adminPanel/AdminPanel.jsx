@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axiosClient from "../../utils/axios";
 import { useNavigate } from "react-router";
+import { FiPlus, FiTrash2, FiCode, FiSave, FiCheck, FiX } from "react-icons/fi";
 
 const problemSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -101,23 +102,36 @@ function AdminPanel() {
   };
 
   return (
-    <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 to-base-300">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+    <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+      <div className="text-center mb-12 relative z-10">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-4 animate-fade-in">
           Create New Problem
         </h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
-        <p className="text-base-content/70 mt-4 text-lg">
+        <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full animate-pulse"></div>
+        <p className="text-base-content/70 mt-4 text-lg animate-fade-in delay-200">
           Build the next coding challenge
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-8 max-w-4xl mx-auto"
+        className="space-y-8 max-w-4xl mx-auto relative z-10"
       >
         {/* Basic Info */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
               <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
@@ -133,9 +147,16 @@ function AdminPanel() {
                 {...register("title")}
                 type="text"
                 placeholder="Enter a compelling problem title..."
-                className={`input input-bordered w-full transition-all duration-200 focus:scale-[1.02] focus:shadow-lg ${
-                  errors.title ? "input-error" : "focus:border-primary"
+                className={`input input-bordered w-full transition-all duration-300 focus:scale-[1.02] focus:shadow-xl hover:shadow-lg bg-base-100/80 backdrop-blur-sm ${
+                  errors.title
+                    ? "input-error"
+                    : "focus:border-primary focus:ring-2 focus:ring-primary/20"
                 }`}
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               />
               {errors.title && (
                 <span className="text-error text-sm mt-1 flex items-center gap-1">
@@ -155,9 +176,16 @@ function AdminPanel() {
                 {...register("description")}
                 rows={6}
                 placeholder="Provide a clear and detailed problem description with examples..."
-                className={`textarea textarea-bordered w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg resize-none ${
-                  errors.description ? "textarea-error" : "focus:border-primary"
+                className={`textarea textarea-bordered w-full transition-all duration-300 focus:scale-[1.01] focus:shadow-xl hover:shadow-lg resize-none bg-base-100/80 backdrop-blur-sm ${
+                  errors.description
+                    ? "textarea-error"
+                    : "focus:border-primary focus:ring-2 focus:ring-primary/20"
                 }`}
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               />
               {errors.description && (
                 <span className="text-error text-sm mt-1 flex items-center gap-1">
@@ -223,7 +251,14 @@ function AdminPanel() {
         </div>
 
         {/* Visible Test Cases */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
               <h2 className="card-title text-2xl flex items-center gap-3">
@@ -238,14 +273,19 @@ function AdminPanel() {
                 }
                 className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
               >
-                <span className="text-lg">+</span>
+                <FiPlus className="w-4 h-4" />
                 Add Case
               </button>
             </div>
             {visibleFields.map((field, index) => (
               <div
                 key={field.id}
-                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-success/30"
+                className="card bg-base-200/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-500 mt-4 p-6 hover:border-success/30 hover:scale-[1.01] hover:-translate-y-1"
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -259,7 +299,7 @@ function AdminPanel() {
                     onClick={() => removeVisible(index)}
                     className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
                   >
-                    ✕
+                    <FiX className="w-3 h-3" />
                   </button>
                 </div>
                 <div className="space-y-4">
@@ -313,7 +353,14 @@ function AdminPanel() {
         </div>
 
         {/* Hidden Test Cases */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
               <h2 className="card-title text-2xl flex items-center gap-3">
@@ -326,14 +373,19 @@ function AdminPanel() {
                 onClick={() => appendHidden({ input: "", output: "" })}
                 className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
               >
-                <span className="text-lg">+</span>
+                <FiPlus className="w-4 h-4" />
                 Add Case
               </button>
             </div>
             {hiddenFields.map((field, index) => (
               <div
                 key={field.id}
-                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-warning/30"
+                className="card bg-base-200/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-500 mt-4 p-6 hover:border-warning/30 hover:scale-[1.01] hover:-translate-y-1"
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -347,7 +399,7 @@ function AdminPanel() {
                     onClick={() => removeHidden(index)}
                     className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
                   >
-                    ✕
+                    <FiX className="w-3 h-3" />
                   </button>
                 </div>
                 <div className="space-y-4">
@@ -388,7 +440,14 @@ function AdminPanel() {
         </div>
 
         {/* Code Templates */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
               <div className="w-2 h-8 bg-gradient-to-b from-info to-info/70 rounded-full"></div>
@@ -457,7 +516,15 @@ function AdminPanel() {
         </div>
 
         {/* Submit */}
-        <div className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl">
+        <div
+          className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 relative z-10 backdrop-blur-sm"
+          style={{
+            backdropFilter: "blur(10px)",
+            background:
+              "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))",
+            border: "1px solid rgba(59, 130, 246, 0.2)",
+          }}
+        >
           <div className="card-body text-center">
             <h3 className="text-lg font-semibold mb-4">
               Ready to publish your problem?
@@ -465,11 +532,16 @@ function AdminPanel() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`btn btn-primary btn-lg w-full max-w-md mx-auto transition-transform duration-200 shadow-lg ${
+              className={`btn btn-primary btn-lg w-full max-w-md mx-auto transition-all duration-300 shadow-lg hover:shadow-xl ${
                 isSubmitting
                   ? "opacity-50 cursor-not-allowed"
                   : "hover:scale-105"
               }`}
+              style={{
+                background: "linear-gradient(135deg, #3b82f6, #10b981)",
+                border: "none",
+                boxShadow: "0 4px 15px rgba(59, 130, 246, 0.3)",
+              }}
             >
               {isSubmitting ? (
                 <>
@@ -478,7 +550,7 @@ function AdminPanel() {
                 </>
               ) : (
                 <>
-                  <span className="text-lg">🚀</span>
+                  <FiSave className="w-5 h-5" />
                   Create Problem
                 </>
               )}

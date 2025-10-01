@@ -99,10 +99,10 @@ const Login = () => {
                 )}
               </div>
               <button className="btn btn-neutral mt-4">Login</button>
-              
+
               {/* Divider */}
               <div className="divider">OR</div>
-              
+
               {/* Google Login Button */}
               <GoogleLoginButton className="w-full" />
             </fieldset>

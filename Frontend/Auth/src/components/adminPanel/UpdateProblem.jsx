@@ -4,6 +4,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axiosClient from "../../utils/axios";
 import { useNavigate } from "react-router";
+import {
+  FiSearch,
+  FiEdit3,
+  FiPlus,
+  FiTrash2,
+  FiEye,
+  FiEyeOff,
+  FiCode,
+  FiSave,
+  FiArrowLeft,
+  FiCheck,
+  FiX,
+} from "react-icons/fi";
 
 const problemSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -249,42 +262,41 @@ function UpdateProblem() {
 
   if (!selectedProblem) {
     return (
-      <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 to-base-300">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+      <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
+        <div className="text-center mb-12 relative z-10">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-4 animate-fade-in">
             Update Problem
           </h1>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
-          <p className="text-base-content/70 mt-4 text-lg">
+          <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full animate-pulse"></div>
+          <p className="text-base-content/70 mt-4 text-lg animate-fade-in delay-200">
             Select a problem to update
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
+        <div className="max-w-2xl mx-auto mb-8 relative z-10">
           <div className="form-control">
             <div className="input-group">
               <input
                 type="text"
                 placeholder="Search problems by title, difficulty, or tag..."
-                className="input input-bordered w-full focus:border-primary"
+                className="input input-bordered w-full focus:border-primary focus:scale-105 transition-all duration-300 bg-base-100/80 backdrop-blur-sm shadow-lg hover:shadow-xl"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  backdropFilter: "blur(10px)",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               />
-              <button className="btn btn-square btn-primary">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+              <button className="btn btn-square btn-primary hover:scale-110 transition-transform duration-200 shadow-lg">
+                <FiSearch className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -292,37 +304,43 @@ function UpdateProblem() {
 
         {/* Problems List */}
         {loading ? (
-          <div className="flex justify-center items-center py-12">
+          <div className="flex justify-center items-center py-12 relative z-10">
             <div className="loading loading-spinner loading-lg text-primary"></div>
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto">
-            <div className="grid gap-4">
-              {filteredProblems.map((problem) => (
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="grid gap-6">
+              {filteredProblems.map((problem, index) => (
                 <div
                   key={problem._id}
-                  className="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+                  className="card bg-base-100/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer hover:scale-[1.02] hover:-translate-y-2 border border-white/20 hover:border-primary/30 group"
                   onClick={() => fetchProblemDetails(problem._id)}
+                  style={{
+                    animationDelay: `${index * 100}ms`,
+                    backdropFilter: "blur(10px)",
+                    background: "rgba(255, 255, 255, 0.1)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                  }}
                 >
                   <div className="card-body p-6">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h3 className="card-title text-xl mb-2">
+                        <h3 className="card-title text-xl mb-2 group-hover:text-primary transition-colors duration-300">
                           {problem.title}
                         </h3>
-                        <p className="text-base-content/70 text-sm line-clamp-2 mb-4">
+                        <p className="text-base-content/70 text-sm line-clamp-2 mb-4 group-hover:text-base-content/80 transition-colors duration-300">
                           {problem.description}
                         </p>
                         <div className="flex items-center gap-3">
                           <span
-                            className={`badge badge-lg font-semibold ${getDifficultyColor(
+                            className={`badge badge-lg font-semibold transition-all duration-300 group-hover:scale-105 ${getDifficultyColor(
                               problem.difficulty
                             )}`}
                           >
                             {problem.difficulty.toUpperCase()}
                           </span>
                           <span
-                            className={`badge badge-lg ${getTagColor(
+                            className={`badge badge-lg transition-all duration-300 group-hover:scale-105 ${getTagColor(
                               problem.tags
                             )}`}
                           >
@@ -330,20 +348,8 @@ function UpdateProblem() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center">
-                        <svg
-                          className="w-6 h-6 text-primary"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
+                      <div className="flex items-center group-hover:scale-110 transition-transform duration-300">
+                        <FiEdit3 className="w-6 h-6 text-primary group-hover:text-secondary transition-colors duration-300" />
                       </div>
                     </div>
                   </div>
@@ -393,13 +399,19 @@ function UpdateProblem() {
 
   // Form rendering (same as AdminPanel but with update functionality)
   return (
-    <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 to-base-300">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-4">
+    <div className="container mx-auto p-6 min-h-screen bg-gradient-to-br from-base-200 via-base-300 to-base-200 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+      <div className="text-center mb-12 relative z-10">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent mb-4 animate-fade-in">
           Update Problem: {selectedProblem.title}
         </h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full"></div>
-        <p className="text-base-content/70 mt-4 text-lg">
+        <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto rounded-full animate-pulse"></div>
+        <p className="text-base-content/70 mt-4 text-lg animate-fade-in delay-200">
           Modify the problem details below
         </p>
       </div>
@@ -413,19 +425,7 @@ function UpdateProblem() {
           }}
           className="btn btn-outline btn-secondary"
         >
-          <svg
-            className="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
+          <FiArrowLeft className="w-4 h-4 mr-2" />
           Back to Problem Selection
         </button>
       </div>
@@ -490,7 +490,14 @@ function UpdateProblem() {
         className="space-y-8 max-w-4xl mx-auto"
       >
         {/* Basic Info */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
               <div className="w-2 h-8 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
@@ -506,9 +513,16 @@ function UpdateProblem() {
                 {...register("title")}
                 type="text"
                 placeholder="Enter a compelling problem title..."
-                className={`input input-bordered w-full transition-all duration-200 focus:scale-[1.02] focus:shadow-lg ${
-                  errors.title ? "input-error" : "focus:border-primary"
+                className={`input input-bordered w-full transition-all duration-300 focus:scale-[1.02] focus:shadow-xl hover:shadow-lg bg-base-100/80 backdrop-blur-sm ${
+                  errors.title
+                    ? "input-error"
+                    : "focus:border-primary focus:ring-2 focus:ring-primary/20"
                 }`}
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               />
               {errors.title && (
                 <span className="text-error text-sm mt-1 flex items-center gap-1">
@@ -528,9 +542,16 @@ function UpdateProblem() {
                 {...register("description")}
                 rows={6}
                 placeholder="Provide a clear and detailed problem description with examples..."
-                className={`textarea textarea-bordered w-full transition-all duration-200 focus:scale-[1.01] focus:shadow-lg resize-none ${
-                  errors.description ? "textarea-error" : "focus:border-primary"
+                className={`textarea textarea-bordered w-full transition-all duration-300 focus:scale-[1.01] focus:shadow-xl hover:shadow-lg resize-none bg-base-100/80 backdrop-blur-sm ${
+                  errors.description
+                    ? "textarea-error"
+                    : "focus:border-primary focus:ring-2 focus:ring-primary/20"
                 }`}
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                }}
               />
               {errors.description && (
                 <span className="text-error text-sm mt-1 flex items-center gap-1">
@@ -596,7 +617,14 @@ function UpdateProblem() {
         </div>
 
         {/* Visible Test Cases */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
               <h2 className="card-title text-2xl flex items-center gap-3">
@@ -611,14 +639,19 @@ function UpdateProblem() {
                 }
                 className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
               >
-                <span className="text-lg">+</span>
+                <FiPlus className="w-4 h-4" />
                 Add Case
               </button>
             </div>
             {visibleFields.map((field, index) => (
               <div
                 key={field.id}
-                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-success/30"
+                className="card bg-base-200/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-500 mt-4 p-6 hover:border-success/30 hover:scale-[1.01] hover:-translate-y-1"
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -632,7 +665,7 @@ function UpdateProblem() {
                     onClick={() => removeVisible(index)}
                     className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
                   >
-                    ✕
+                    <FiX className="w-3 h-3" />
                   </button>
                 </div>
                 <div className="space-y-4">
@@ -686,7 +719,14 @@ function UpdateProblem() {
         </div>
 
         {/* Hidden Test Cases */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <div className="flex items-center justify-between mb-6">
               <h2 className="card-title text-2xl flex items-center gap-3">
@@ -699,14 +739,19 @@ function UpdateProblem() {
                 onClick={() => appendHidden({ input: "", output: "" })}
                 className="btn btn-primary btn-sm gap-2 hover:scale-105 transition-transform duration-200"
               >
-                <span className="text-lg">+</span>
+                <FiPlus className="w-4 h-4" />
                 Add Case
               </button>
             </div>
             {hiddenFields.map((field, index) => (
               <div
                 key={field.id}
-                className="card bg-base-200 shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 mt-4 p-6 hover:border-warning/30"
+                className="card bg-base-200/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-500 mt-4 p-6 hover:border-warning/30 hover:scale-[1.01] hover:-translate-y-1"
+                style={{
+                  backdropFilter: "blur(5px)",
+                  background: "rgba(255, 255, 255, 0.05)",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
+                }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -720,7 +765,7 @@ function UpdateProblem() {
                     onClick={() => removeHidden(index)}
                     className="btn btn-error btn-xs hover:scale-110 transition-transform duration-200"
                   >
-                    ✕
+                    <FiX className="w-3 h-3" />
                   </button>
                 </div>
                 <div className="space-y-4">
@@ -761,7 +806,14 @@ function UpdateProblem() {
         </div>
 
         {/* Code Templates */}
-        <div className="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-all duration-300 hover:border-primary/30">
+        <div
+          className="card bg-base-100/80 backdrop-blur-sm shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-500 hover:border-primary/30 hover:-translate-y-1 relative z-10"
+          style={{
+            backdropFilter: "blur(10px)",
+            background: "rgba(255, 255, 255, 0.1)",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+          }}
+        >
           <div className="card-body">
             <h2 className="card-title text-2xl mb-6 flex items-center gap-3">
               <div className="w-2 h-8 bg-gradient-to-b from-info to-info/70 rounded-full"></div>
@@ -830,7 +882,15 @@ function UpdateProblem() {
         </div>
 
         {/* Submit */}
-        <div className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl">
+        <div
+          className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 relative z-10 backdrop-blur-sm"
+          style={{
+            backdropFilter: "blur(10px)",
+            background:
+              "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))",
+            border: "1px solid rgba(59, 130, 246, 0.2)",
+          }}
+        >
           <div className="card-body text-center">
             <h3 className="text-lg font-semibold mb-4">
               Ready to update this problem?
@@ -838,7 +898,12 @@ function UpdateProblem() {
             <button
               type="submit"
               disabled={isUpdating}
-              className="btn btn-primary btn-lg w-full max-w-md mx-auto hover:scale-105 transition-transform duration-200 shadow-lg"
+              className="btn btn-primary btn-lg w-full max-w-md mx-auto hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              style={{
+                background: "linear-gradient(135deg, #3b82f6, #10b981)",
+                border: "none",
+                boxShadow: "0 4px 15px rgba(59, 130, 246, 0.3)",
+              }}
             >
               {isUpdating ? (
                 <>

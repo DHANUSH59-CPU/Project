@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosClient from "../utils/axios";
 import Loading from "../components/Loading";
 import { useNavigate, useParams } from "react-router";
-import { Heart, Bookmark, MessageCircle } from "lucide-react";
+import { Heart, Bookmark, MessageCircle, RefreshCw } from "lucide-react";
 
 const ProblemsArena = () => {
   const [problems, setProblems] = useState([]);
@@ -25,6 +25,12 @@ const ProblemsArena = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Function to refresh problems data (can be called from other components)
+  const refreshProblems = async () => {
+    setLoading(true);
+    await getAllProblems();
   };
 
   useEffect(() => {
@@ -126,8 +132,15 @@ const ProblemsArena = () => {
           <option value="linkedList">🔗 Linked List</option>
         </select>
 
-        {/* Filter Results Count */}
+        {/* Filter Results Count and Refresh Button */}
         <div className="flex items-center gap-2 ml-auto">
+          <button
+            onClick={refreshProblems}
+            className="btn btn-ghost btn-sm"
+            title="Refresh social counts"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
           <span className="text-base-content/70 text-sm">
             Showing {filteredProblems.length} of {problems.length} problems
           </span>

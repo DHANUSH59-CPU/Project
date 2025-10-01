@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
-import { Edit } from "lucide-react";
+import { Edit, Trash2, AlertTriangle } from "lucide-react";
 import axiosClient from "../utils/axios";
 import Loading from "../components/Loading";
 import UserInfoCard from "../components/profile/UserInfoCard";
 import DailySubmissionsChart from "../components/profile/DailySubmissionsChart";
 import MonthlySubmissionsLineChart from "../components/profile/MonthlySubmissionsLineChart";
 import YearlyActivityHeatMap from "../components/profile/YearlyActivityHeatMap";
+import { useNavigate } from "react-router";
 
 const UserProfilePage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const [editForm, setEditForm] = useState({
     firstName: "",
     lastName: "",
@@ -76,6 +81,33 @@ const UserProfilePage = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE") {
+      alert("Please type 'DELETE' to confirm account deletion.");
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await axiosClient.delete("/user/profile");
+      alert(
+        "Account deleted successfully. You will be redirected to the login page."
+      );
+      // Clear any stored tokens
+      localStorage.removeItem("token");
+      sessionStorage.clear();
+      // Redirect to login page
+      navigate("/login");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account. Please try again.");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+      setDeleteConfirmText("");
+    }
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -118,13 +150,22 @@ const UserProfilePage = () => {
                     {profile.statistics?.totalProblemsSolved || 0}
                   </p>
                 </div>
-                <button
-                  onClick={() => setShowEditModal(true)}
-                  className="btn btn-outline btn-sm"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="btn btn-outline btn-sm"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit Profile
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="btn btn-error btn-sm"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete Account
+                  </button>
+                </div>
               </div>
               <DailySubmissionsChart activity={dailyActivity} />
             </div>
@@ -238,6 +279,79 @@ const UserProfilePage = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Account Confirmation Modal */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-base-100 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-error/20 rounded-full">
+                  <AlertTriangle className="w-6 h-6 text-error" />
+                </div>
+                <h3 className="text-xl font-bold text-error">Delete Account</h3>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-base-content/80 mb-4">
+                  <strong>Warning:</strong> This action cannot be undone. This
+                  will permanently delete your account and all associated data
+                  including:
+                </p>
+                <ul className="list-disc list-inside text-sm text-base-content/70 mb-4 space-y-1">
+                  <li>Your profile information</li>
+                  <li>All your submissions</li>
+                  <li>Your likes, favorites, and comments</li>
+                  <li>All your activity history</li>
+                </ul>
+                <p className="text-sm text-base-content/80">
+                  Type <strong className="text-error">DELETE</strong> to
+                  confirm:
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="Type DELETE to confirm"
+                  className="input input-bordered w-full"
+                  disabled={isDeleting}
+                />
+              </div>
+
+              <div className="flex justify-end space-x-3">
+                <button
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setDeleteConfirmText("");
+                  }}
+                  className="btn btn-ghost"
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="btn btn-error"
+                  disabled={isDeleting || deleteConfirmText !== "DELETE"}
+                >
+                  {isDeleting ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4" />
+                      Delete Account
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         )}
