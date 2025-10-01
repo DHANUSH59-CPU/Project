@@ -16,6 +16,7 @@ const { leaderboardRouter } = require("./routes/leaderboard");
 const { sprintRouter } = require("./routes/sprint");
 const { profileRouter } = require("./routes/profile");
 const { activityRouter } = require("./routes/activity");
+const { socialRouter } = require("./routes/social");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -43,6 +44,7 @@ app.use("/leaderboard", leaderboardRouter);
 app.use("/sprint", sprintRouter);
 app.use("/profile", profileRouter);
 app.use("/activity", activityRouter);
+app.use("/social", socialRouter);
 
 const InitizializeConnection = async () => {
   try {

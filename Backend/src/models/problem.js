@@ -95,6 +95,23 @@ const problemSchema = new Schema({
     ref: "user",
     required: true,
   },
+
+  // Social features
+  likesCount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  favoritesCount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
+  commentsCount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
 });
 
 const Problem = mongoose.model("problem", problemSchema);

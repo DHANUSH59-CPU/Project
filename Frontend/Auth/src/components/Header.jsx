@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import StarBorder from "../ui/StarBorder";
 import { useSelector } from "react-redux";
-import UserStats from "./UserStats";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -47,10 +46,6 @@ const Header = () => {
         </StarBorder>
       </div>
 
-      <div className="hidden md:flex">
-        <UserStats />
-      </div>
-
       <div className="dropdown dropdown-end">
         <StarBorder
           as="div"
@@ -79,6 +74,24 @@ const Header = () => {
             <a onClick={() => navigate("/profile")} className="justify-between">
               Profile
               <span className="badge">New</span>
+            </a>
+          </li>
+          <li>
+            <a
+              onClick={() => navigate("/social/liked")}
+              className="flex items-center space-x-2"
+            >
+              <span>❤️</span>
+              <span>Liked Problems</span>
+            </a>
+          </li>
+          <li>
+            <a
+              onClick={() => navigate("/social/favorites")}
+              className="flex items-center space-x-2"
+            >
+              <span>⭐</span>
+              <span>Favorites</span>
             </a>
           </li>
           <li>

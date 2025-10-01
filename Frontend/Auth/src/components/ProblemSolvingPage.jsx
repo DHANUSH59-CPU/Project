@@ -5,6 +5,8 @@ import Loading from "./Loading";
 import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
 import Timer from "./Timer";
+import SocialActions from "./SocialActions";
+import CommentsSection from "./CommentsSection";
 
 const ProblemSolvingPage = () => {
   const { problemId } = useParams();
@@ -14,6 +16,7 @@ const ProblemSolvingPage = () => {
   const [submissionResult, setSubmissionResult] = useState(null);
   const [showSubmissionResult, setShowSubmissionResult] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   // --- Resizing Logic ---
   const [leftPanelWidth, setLeftPanelWidth] = useState(() => {
@@ -163,6 +166,23 @@ const ProblemSolvingPage = () => {
             isTimerRunning={isTimerRunning}
             setIsTimerRunning={setIsTimerRunning}
           />
+          <button
+            onClick={() => setShowComments(!showComments)}
+            className={`btn btn-sm ${
+              showComments ? "btn-primary" : "btn-ghost"
+            } flex items-center space-x-2`}
+            title="Toggle Comments"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))" }}
+            >
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+            </svg>
+            <span>Comments</span>
+          </button>
           <button className="btn btn-ghost btn-sm" title="Fullscreen">
             <svg
               className="w-4 h-4"
@@ -189,14 +209,24 @@ const ProblemSolvingPage = () => {
         {/* Left Panel - Problem Description */}
         <div
           style={{ width: `${leftPanelWidth}px` }}
-          className="h-full overflow-hidden flex-shrink-0 bg-base-100"
+          className="h-full overflow-hidden flex-shrink-0 bg-base-100 flex flex-col"
         >
-          <LeftPanel
-            problem={problem}
-            code={code}
-            submissionResult={submissionResult}
-            showSubmissionResult={showSubmissionResult}
-            setShowSubmissionResult={setShowSubmissionResult}
+          <div className="flex-1 overflow-y-auto">
+            <LeftPanel
+              problem={problem}
+              code={code}
+              submissionResult={submissionResult}
+              showSubmissionResult={showSubmissionResult}
+              setShowSubmissionResult={setShowSubmissionResult}
+            />
+          </div>
+
+          {/* Social Actions */}
+          <SocialActions
+            problemId={problemId}
+            initialLikesCount={problem.likesCount || 0}
+            initialFavoritesCount={problem.favoritesCount || 0}
+            initialCommentsCount={problem.commentsCount || 0}
           />
         </div>
 
@@ -211,16 +241,22 @@ const ProblemSolvingPage = () => {
         />
 
         {/* Right Panel - Code Editor */}
-        <div className="flex-grow h-full overflow-hidden bg-base-100">
-          <RightPanel
-            code={code}
-            setCode={setCode}
-            problem={problem}
-            submissionResult={submissionResult}
-            setSubmissionResult={setSubmissionResult}
-            showSubmissionResult={showSubmissionResult}
-            setShowSubmissionResult={setShowSubmissionResult}
-          />
+        <div className="flex-grow h-full overflow-hidden bg-base-100 flex flex-col">
+          {showComments ? (
+            <div className="flex-1 overflow-hidden">
+              <CommentsSection problemId={problemId} />
+            </div>
+          ) : (
+            <RightPanel
+              code={code}
+              setCode={setCode}
+              problem={problem}
+              submissionResult={submissionResult}
+              setSubmissionResult={setSubmissionResult}
+              showSubmissionResult={showSubmissionResult}
+              setShowSubmissionResult={setShowSubmissionResult}
+            />
+          )}
         </div>
       </div>
     </main>

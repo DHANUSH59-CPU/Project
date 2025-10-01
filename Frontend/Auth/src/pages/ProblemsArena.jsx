@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axiosClient from "../utils/axios";
 import Loading from "../components/Loading";
 import { useNavigate, useParams } from "react-router";
+import { Heart, Bookmark, MessageCircle } from "lucide-react";
 
 const ProblemsArena = () => {
   const [problems, setProblems] = useState([]);
@@ -169,8 +170,24 @@ const ProblemsArena = () => {
                 </div>
               </div>
 
-              {/* Right: difficulty */}
-              <div className="flex items-center gap-2">
+              {/* Right: social data + difficulty */}
+              <div className="flex items-center gap-3">
+                {/* Social Stats */}
+                <div className="flex items-center gap-3 text-sm text-base-content/60">
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-4 h-4" />
+                    <span>{problem.likesCount || 0}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Bookmark className="w-4 h-4" />
+                    <span>{problem.favoritesCount || 0}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageCircle className="w-4 h-4" />
+                    <span>{problem.commentsCount || 0}</span>
+                  </div>
+                </div>
+
                 <span
                   className={`font-semibold text-sm capitalize px-3 py-1 rounded-full ${
                     problem.difficulty === "easy"

@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
+import { Code, Trophy, Zap, BarChart3, Bot, User } from "lucide-react";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -55,40 +56,155 @@ const Hero = () => {
           you on your coding journey.
         </motion.p>
 
-        {/* Cards with animations */}
-        <div className="flex items-center justify-center m-10 gap-5 flex-wrap">
-          {[1, 2, 3].map((item, i) => (
+        {/* Enhanced Feature Cards */}
+        <div className="flex items-center justify-center m-10 gap-6 flex-wrap">
+          {[
+            {
+              icon: Code,
+              title: "Code Problems",
+              description:
+                "Practice with hundreds of coding problems across different difficulty levels and topics",
+              features: [
+                "Multiple Languages",
+                "Real-time Testing",
+                "Judge0 Integration",
+              ],
+              color: "badge-primary",
+              iconColor: "text-primary",
+              borderColor: "border-primary/20",
+            },
+            {
+              icon: Trophy,
+              title: "Leaderboard",
+              description:
+                "Compete with other developers and track your progress with points and streaks",
+              features: ["Global Rankings", "Points System", "Streak Tracking"],
+              color: "badge-secondary",
+              iconColor: "text-secondary",
+              borderColor: "border-secondary/20",
+            },
+            {
+              icon: Zap,
+              title: "Sprint System",
+              description:
+                "Structured learning paths with curated problem collections and progress tracking",
+              features: ["Learning Paths", "Progress Tracking", "Achievements"],
+              color: "badge-accent",
+              iconColor: "text-accent",
+              borderColor: "border-accent/20",
+            },
+            {
+              icon: BarChart3,
+              title: "Advanced Analytics",
+              description:
+                "Comprehensive profile with detailed statistics, charts, and activity tracking",
+              features: [
+                "Activity Charts",
+                "Progress Visualization",
+                "Performance Insights",
+              ],
+              color: "badge-info",
+              iconColor: "text-info",
+              borderColor: "border-info/20",
+            },
+            {
+              icon: Bot,
+              title: "AI Chat Assistant",
+              description:
+                "Get intelligent hints and guidance from our AI coding mentor without spoiling solutions",
+              features: ["Smart Hints", "Code Review", "Learning Support"],
+              color: "badge-success",
+              iconColor: "text-success",
+              borderColor: "border-success/20",
+            },
+            {
+              icon: User,
+              title: "User Profiles",
+              description:
+                "Detailed user profiles with statistics, achievements, and comprehensive progress tracking",
+              features: [
+                "Detailed Stats",
+                "Achievement System",
+                "Activity Heatmap",
+              ],
+              color: "badge-warning",
+              iconColor: "text-warning",
+              borderColor: "border-warning/20",
+            },
+          ].map((feature, i) => (
             <motion.div
               key={i}
-              className="card bg-base-100 w-96 shadow-sm"
+              className="group relative"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.3, duration: 0.8 }}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0px 5px 15px rgba(0,0,0,0.2)",
-              }}
+              transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <figure>
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-                  alt="Card"
+              {/* Hover Glow Effect */}
+              <div
+                className={`absolute -inset-0.5 bg-gradient-to-r ${feature.iconColor} opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-500 rounded-2xl`}
+              />
+
+              <motion.div
+                className={`relative card bg-base-100 w-96 shadow-xl hover:shadow-2xl border-2 ${feature.borderColor} hover:border-opacity-60 transition-all duration-300 rounded-2xl overflow-hidden`}
+                whileHover={{
+                  y: -10,
+                  transition: { duration: 0.3, ease: "easeOut" },
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {/* Top Accent Line */}
+                <div
+                  className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.iconColor} opacity-50 group-hover:opacity-100 transition-opacity duration-300`}
                 />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title">
-                  Card Title
-                  <div className="badge badge-secondary">NEW</div>
-                </h2>
-                <p>
-                  A card component has a figure, a body part, and inside body
-                  there are title and actions parts
-                </p>
-                <div className="card-actions justify-end">
-                  <div className="badge badge-outline">Fashion</div>
-                  <div className="badge badge-outline">Products</div>
+
+                <div className="card-body p-8">
+                  {/* Icon and Title Section */}
+                  <div className="flex items-start gap-4 mb-4">
+                    <motion.div
+                      className={`p-3 rounded-xl bg-base-200 ${feature.iconColor} group-hover:scale-110 transition-transform duration-300`}
+                      whileHover={{ rotate: [0, -10, 10, 0] }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <feature.icon className="w-8 h-8" strokeWidth={2.5} />
+                    </motion.div>
+
+                    <div className="flex-1">
+                      <h2 className="card-title text-2xl mb-2 group-hover:translate-x-1 transition-transform duration-300">
+                        {feature.title}
+                      </h2>
+                      <div
+                        className={`badge ${feature.color} badge-sm font-semibold`}
+                      >
+                        FEATURE
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-base-content/70 leading-relaxed mb-6 text-sm">
+                    {feature.description}
+                  </p>
+
+                  {/* Features Tags */}
+                  <div className="card-actions flex-wrap gap-2">
+                    {feature.features.map((feat, idx) => (
+                      <motion.div
+                        key={idx}
+                        className="badge badge-outline badge-md px-3 py-3 hover:badge-primary transition-colors duration-200 cursor-default"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {feat}
+                      </motion.div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+
+                {/* Bottom Decorative Element */}
+                <div className="absolute bottom-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                  <feature.icon className="w-full h-full" strokeWidth={1} />
+                </div>
+              </motion.div>
             </motion.div>
           ))}
         </div>

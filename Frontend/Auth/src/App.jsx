@@ -23,6 +23,7 @@ import SprintsPage from "./pages/SprintsPage";
 import SprintDetailPage from "./pages/SprintDetailPage";
 import SprintProgressPage from "./pages/SprintProgressPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import SocialDataPage from "./pages/SocialDataPage";
 
 export default function App() {
   const { isAuthenticated, loading, user } = useSelector(
@@ -71,6 +72,10 @@ export default function App() {
               <Route
                 path="/profile"
                 element={isAuthenticated ? <UserProfilePage /> : <Login />}
+              />
+              <Route
+                path="/social/:type"
+                element={isAuthenticated ? <SocialDataPage /> : <Login />}
               />
               <Route
                 path="/admin"

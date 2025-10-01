@@ -4,8 +4,6 @@ import ChatInterface from "./ChatInterface";
 import CollapsibleSection from "./CollapsibleSection";
 import SubmissionResultView from "./SubmissionResultView";
 import PastSubmissions from "./PastSubmissions";
-import ShareModal from "./ShareModal";
-import BookmarkModal from "./BookmarkModal";
 import SolutionsSection from "./SolutionsSection";
 
 const tabsConfig = [
@@ -136,10 +134,6 @@ const LeftPanel = ({
 }) => {
   const [activeTab, setActiveTab] = useState("Description");
   const [qaBlocks, setQaBlocks] = useState([]);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [isBookmarkModalOpen, setIsBookmarkModalOpen] = useState(false);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [isProblemBookmarked, setIsProblemBookmarked] = useState(false);
 
   const handleTabChange = (tabName) => {
     if (showSubmissionResult) {
@@ -188,40 +182,6 @@ const LeftPanel = ({
                       <h1 className="text-2xl font-medium text-base-content mr-3">
                         {problem.title}
                       </h1>
-                      <button
-                        className="pb-[2.4px] cursor-pointer hover:text-primary"
-                        onClick={() => setIsBookmarkModalOpen(true)}
-                      >
-                        {isProblemBookmarked ? (
-                          <svg
-                            className="w-5 h-5 text-success"
-                            fill="currentColor"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                            />
-                          </svg>
-                        ) : (
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                            />
-                          </svg>
-                        )}
-                      </button>
                     </div>
                     <span className="font-light font-sans tracking-widest text-sm">
                       Points: +{getProblemPoints(problem.difficulty)}
@@ -493,89 +453,6 @@ const LeftPanel = ({
           )}
         </div>
       )}
-
-      {/* Bottom Action Bar */}
-      <div className="h-10 flex items-center space-x-3 px-3 border-t border-base-300 bg-base-200 text-base-content/70 flex-shrink-0">
-        <button
-          className="flex items-center space-x-1 p-1.5 rounded hover:bg-base-300"
-          aria-label="Like problem"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
-          </svg>
-          <span className="text-xs">0</span>
-        </button>
-        <button
-          className="p-1.5 rounded hover:bg-base-300"
-          aria-label="Add to favorites"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-            />
-          </svg>
-        </button>
-        <div className="flex-grow"></div>
-        <button
-          className="p-1.5 rounded hover:bg-base-300"
-          aria-label="Share problem"
-          onClick={() => setIsShareModalOpen(true)}
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
-            />
-          </svg>
-        </button>
-        <div className="text-xs flex items-center">
-          <span className="w-2 h-2 bg-success rounded-full mr-1.5"></span>3
-          Online
-        </div>
-      </div>
-
-      {/* Share Modal */}
-      <ShareModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        problem={problem}
-      />
-
-      {/* Bookmark Modal */}
-      <BookmarkModal
-        isOpen={isBookmarkModalOpen}
-        onClose={() => setIsBookmarkModalOpen(false)}
-        problem={problem}
-        bookmarks={bookmarks}
-        setBookmarks={setBookmarks}
-        isProblemBookmarked={isProblemBookmarked}
-        setIsProblemBookmarked={setIsProblemBookmarked}
-      />
     </div>
   );
 };
