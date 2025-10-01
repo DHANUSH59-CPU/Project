@@ -17,6 +17,7 @@ const { sprintRouter } = require("./routes/sprint");
 const { profileRouter } = require("./routes/profile");
 const { activityRouter } = require("./routes/activity");
 const { socialRouter } = require("./routes/social");
+const videoRouter = require("./routes/video");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -45,10 +46,25 @@ app.use("/sprint", sprintRouter);
 app.use("/profile", profileRouter);
 app.use("/activity", activityRouter);
 app.use("/social", socialRouter);
+app.use("/video", videoRouter);
 
 const InitizializeConnection = async () => {
   try {
-    await Promise.all([redisClient.connect(), connectDB()]);
+    // Connect to MongoDB
+    await connectDB();
+    console.log("MongoDB Connected");
+
+    // Try to connect to Redis (optional)
+    try {
+      await redisClient.connect();
+      console.log("Redis Connected");
+    } catch (redisError) {
+      console.log(
+        "Redis connection failed, continuing without Redis:",
+        redisError.message
+      );
+    }
+
     console.log("DB'S Connected");
 
     app.listen(PORT, () => {

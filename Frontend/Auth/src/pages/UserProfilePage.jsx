@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
-import { Edit, Trash2, AlertTriangle } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  AlertTriangle,
+  Upload,
+  X,
+  Image as ImageIcon,
+} from "lucide-react";
 import axiosClient from "../utils/axios";
+import axios from "axios";
 import Loading from "../components/Loading";
 import UserInfoCard from "../components/profile/UserInfoCard";
 import DailySubmissionsChart from "../components/profile/DailySubmissionsChart";
@@ -16,6 +24,10 @@ const UserProfilePage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [dragOver, setDragOver] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [editForm, setEditForm] = useState({
     firstName: "",
     lastName: "",
@@ -105,6 +117,65 @@ const UserProfilePage = () => {
       setIsDeleting(false);
       setShowDeleteModal(false);
       setDeleteConfirmText("");
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    setUploadingImage(true);
+    setUploadProgress(0);
+
+    try {
+      // Get upload signature from backend
+      const signatureResponse = await axiosClient.get("/profile/image/upload");
+
+      const { signature, timestamp, public_id, api_key, upload_url } =
+        signatureResponse.data;
+
+      // Prepare form data for Cloudinary upload
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("signature", signature);
+      fd.append("timestamp", timestamp);
+      fd.append("public_id", public_id);
+      fd.append("api_key", api_key);
+
+      // Upload to Cloudinary
+      const uploadResponse = await axios.post(upload_url, fd, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (e) => {
+          const progress = Math.round((e.loaded * 100) / e.total);
+          setUploadProgress(progress);
+        },
+      });
+
+      const cloudinaryResult = uploadResponse.data;
+
+      // Save metadata to database
+      const metadataResponse = await axiosClient.post("/profile/image/save", {
+        cloudinaryPublicId: cloudinaryResult.public_id,
+        secureUrl: cloudinaryResult.secure_url,
+      });
+
+      // Update local state
+      setEditForm({
+        ...editForm,
+        profileImageUrl: cloudinaryResult.secure_url,
+      });
+
+      // Update profile state
+      setProfile({
+        ...profile,
+        profileImageUrl: cloudinaryResult.secure_url,
+        profile_img: cloudinaryResult.secure_url,
+      });
+
+      setSelectedImage(null);
+      setUploadProgress(0);
+    } catch (error) {
+      console.error("Image upload error:", error);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -249,22 +320,165 @@ const UserProfilePage = () => {
                     max="80"
                   />
                 </div>
+                {/* Profile Image Section */}
                 <div>
                   <label className="label">
-                    <span className="label-text">Profile Image URL</span>
+                    <span className="label-text">Profile Image</span>
                   </label>
-                  <input
-                    type="url"
-                    value={editForm.profileImageUrl}
-                    onChange={(e) =>
-                      setEditForm({
-                        ...editForm,
-                        profileImageUrl: e.target.value,
-                      })
-                    }
-                    className="input input-bordered w-full"
-                    placeholder="https://example.com/image.jpg"
-                  />
+
+                  {/* Current Image Display */}
+                  {editForm.profileImageUrl && (
+                    <div className="mb-4">
+                      <div className="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                        <img
+                          src={editForm.profileImageUrl}
+                          alt="Current profile"
+                          className="w-16 h-16 rounded-full object-cover"
+                        />
+                        <div className="flex-1">
+                          <p className="text-sm text-base-content/70">
+                            Current image
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditForm({ ...editForm, profileImageUrl: "" })
+                            }
+                            className="btn btn-sm btn-ghost text-error"
+                          >
+                            <X className="w-4 h-4" />
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Image Upload Area */}
+                  <div
+                    onDragEnter={(e) => {
+                      e.preventDefault();
+                      setDragOver(true);
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      setDragOver(false);
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setDragOver(false);
+                      const files = e.dataTransfer.files;
+                      if (files.length > 0) {
+                        const file = files[0];
+                        if (
+                          file.type.startsWith("image/") &&
+                          file.size <= 10 * 1024 * 1024
+                        ) {
+                          setSelectedImage(file);
+                        } else {
+                          alert("Please select a valid image file under 10MB");
+                        }
+                      }
+                    }}
+                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                      dragOver
+                        ? "border-primary bg-primary/10"
+                        : "border-base-300 hover:border-primary"
+                    }`}
+                  >
+                    {selectedImage ? (
+                      <div className="space-y-3">
+                        <img
+                          src={URL.createObjectURL(selectedImage)}
+                          alt="Selected"
+                          className="w-20 h-20 rounded-full object-cover mx-auto"
+                        />
+                        <p className="text-sm text-base-content/70">
+                          {selectedImage.name}
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <button
+                            type="button"
+                            onClick={() => handleImageUpload(selectedImage)}
+                            disabled={uploadingImage}
+                            className="btn btn-primary btn-sm"
+                          >
+                            {uploadingImage ? (
+                              <>
+                                <span className="loading loading-spinner loading-xs"></span>
+                                Uploading... {uploadProgress}%
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-4 h-4" />
+                                Upload Image
+                              </>
+                            )}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setSelectedImage(null)}
+                            className="btn btn-ghost btn-sm"
+                          >
+                            <X className="w-4 h-4" />
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <ImageIcon className="w-12 h-12 mx-auto text-base-content/50" />
+                        <div>
+                          <p className="text-base-content/70">
+                            Drag & drop an image here, or{" "}
+                            <label className="link link-primary cursor-pointer">
+                              browse files
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={(e) => {
+                                  const file = e.target.files[0];
+                                  if (file && file.size <= 10 * 1024 * 1024) {
+                                    setSelectedImage(file);
+                                  } else {
+                                    alert(
+                                      "Please select a valid image file under 10MB"
+                                    );
+                                  }
+                                }}
+                              />
+                            </label>
+                          </p>
+                          <p className="text-xs text-base-content/50">
+                            Max 10MB, JPG/PNG/GIF/WebP
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Manual URL Input (Alternative) */}
+                  <div className="mt-4">
+                    <label className="label">
+                      <span className="label-text">
+                        Or enter image URL manually
+                      </span>
+                    </label>
+                    <input
+                      type="url"
+                      value={editForm.profileImageUrl}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          profileImageUrl: e.target.value,
+                        })
+                      }
+                      className="input input-bordered w-full"
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-end space-x-2">
                   <button

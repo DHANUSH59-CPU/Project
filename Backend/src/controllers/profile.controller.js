@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const Problem = require("../models/problem");
 const SprintProgress = require("../models/sprintProgress.model");
 const bcrypt = require("bcrypt");
+const cloudinary = require("../config/cloudinary");
 
 // Get user profile with detailed statistics
 const getUserProfile = async (req, res) => {
@@ -401,10 +402,95 @@ const getUserAchievements = async (req, res) => {
   }
 };
 
+// Get image upload signature
+const getImageUploadSignature = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    // Generate unique public_id for the image
+    const timestamp = Math.round(new Date().getTime() / 1000);
+    const publicId = `codeai-profiles/${userId}_${timestamp}`;
+
+    // Upload parameters
+    const uploadParams = {
+      timestamp: timestamp,
+      public_id: publicId,
+    };
+
+    // Generate signature
+    const signature = cloudinary.utils.api_sign_request(
+      uploadParams,
+      process.env.CLOUDINARY_API_SECRET
+    );
+
+    const reply = {
+      signature,
+      timestamp,
+      public_id: publicId,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      upload_url: `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+    };
+
+    res.status(200).json(reply);
+  } catch (error) {
+    console.error("Error generating image upload signature:", error);
+    res.status(500).json({ error: "Failed to generate upload credentials" });
+  }
+};
+
+// Save image metadata after upload
+const saveImageMetadata = async (req, res) => {
+  try {
+    const { cloudinaryPublicId, secureUrl } = req.body;
+    const userId = req.userId;
+
+    // Verify the upload with Cloudinary
+    const cloudinaryResource = await cloudinary.api.resource(
+      cloudinaryPublicId,
+      { resource_type: "image" }
+    );
+
+    if (!cloudinaryResource) {
+      return res.status(400).json({ error: "Image not found on Cloudinary" });
+    }
+
+    // Update user profile with image URL
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        profileImageUrl: cloudinaryResource.secureUrl || secureUrl,
+        profile_img: cloudinaryResource.secureUrl || secureUrl,
+      },
+      { new: true }
+    ).select(
+      "-password -resetPasswordToken -resetPasswordExpiresAt -verificationToken -verificationTokenExpiresAt"
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Profile image updated successfully",
+      user: {
+        id: updatedUser._id,
+        profileImageUrl: updatedUser.profileImageUrl,
+        profile_img: updatedUser.profile_img,
+      },
+    });
+  } catch (error) {
+    console.error("Error saving image metadata:", error);
+    res.status(500).json({ error: "Failed to save image metadata" });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
   getUserActivity,
   getUserAchievements,
+  getImageUploadSignature,
+  saveImageMetadata,
 };

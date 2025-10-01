@@ -16,7 +16,9 @@ import {
   FiArrowLeft,
   FiCheck,
   FiX,
+  FiVideo,
 } from "react-icons/fi";
+import VideoUploadModal from "./VideoUploadModal";
 
 const problemSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -65,6 +67,7 @@ function UpdateProblem() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const [showVideoUpload, setShowVideoUpload] = useState(false);
 
   const {
     register,
@@ -881,6 +884,42 @@ function UpdateProblem() {
           </div>
         </div>
 
+        {/* Video Upload Section */}
+        {selectedProblem && (
+          <div
+            className="card bg-gradient-to-r from-info/10 to-info/5 border border-info/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 relative z-10 backdrop-blur-sm"
+            style={{
+              backdropFilter: "blur(10px)",
+              background:
+                "linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05))",
+              border: "1px solid rgba(6, 182, 212, 0.2)",
+            }}
+          >
+            <div className="card-body text-center">
+              <h3 className="text-lg font-semibold mb-4 flex items-center justify-center gap-2">
+                <FiVideo className="w-5 h-5 text-info" />
+                Video Solution
+              </h3>
+              <p className="text-sm opacity-70 mb-4">
+                Upload a video explanation for this problem
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowVideoUpload(true)}
+                className="btn btn-info btn-lg hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                style={{
+                  background: "linear-gradient(135deg, #06b6d4, #0891b2)",
+                  border: "none",
+                  boxShadow: "0 4px 15px rgba(6, 182, 212, 0.3)",
+                }}
+              >
+                <FiVideo className="mr-2 h-5 w-5" />
+                Upload Video Solution
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Submit */}
         <div
           className="card bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.01] hover:-translate-y-1 relative z-10 backdrop-blur-sm"
@@ -923,6 +962,14 @@ function UpdateProblem() {
           </div>
         </div>
       </form>
+
+      {/* Video Upload Modal */}
+      <VideoUploadModal
+        isOpen={showVideoUpload}
+        onClose={() => setShowVideoUpload(false)}
+        problemId={selectedProblem?._id}
+        problemTitle={selectedProblem?.title}
+      />
     </div>
   );
 }

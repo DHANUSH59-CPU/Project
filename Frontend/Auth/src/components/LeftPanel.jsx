@@ -1,10 +1,10 @@
 import { useState } from "react";
-import EditorialSection from "./EditorialSection";
 import ChatInterface from "./ChatInterface";
 import CollapsibleSection from "./CollapsibleSection";
 import SubmissionResultView from "./SubmissionResultView";
 import PastSubmissions from "./PastSubmissions";
 import SolutionsSection from "./SolutionsSection";
+import VideoPlayer from "./VideoPlayer";
 
 const tabsConfig = [
   {
@@ -398,7 +398,10 @@ const LeftPanel = ({
                 )}
 
                 {activeTab === "Editorial" && (
-                  <EditorialSection problem={problem} />
+                  <div className="space-y-6">
+                    {/* Video Solution */}
+                    <VideoPlayer problemId={problem._id} />
+                  </div>
                 )}
                 {activeTab === "Submissions" && (
                   <PastSubmissions problem={problem} />

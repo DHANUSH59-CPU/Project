@@ -5,6 +5,8 @@ const {
   changePassword,
   getUserActivity,
   getUserAchievements,
+  getImageUploadSignature,
+  saveImageMetadata,
 } = require("../controllers/profile.controller");
 const userMiddleware = require("../middleware/userMiddleware");
 
@@ -24,5 +26,9 @@ profileRouter.get("/activity", userMiddleware, getUserActivity);
 
 // Get user achievements
 profileRouter.get("/achievements", userMiddleware, getUserAchievements);
+
+// Image upload endpoints
+profileRouter.get("/image/upload", userMiddleware, getImageUploadSignature);
+profileRouter.post("/image/save", userMiddleware, saveImageMetadata);
 
 module.exports = { profileRouter };
