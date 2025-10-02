@@ -11,9 +11,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
-        name: "Auth",
-        short_name: "Auth",
-        description: "A Progressive Web App built with React and Vite",
+        name: "AlgoMaster",
+        short_name: "AlgoMaster",
+        description: "Competitive Programming Platform with Social Features",
         theme_color: "#2563eb",
         background_color: "#ffffff",
         display: "standalone",

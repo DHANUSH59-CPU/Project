@@ -17,7 +17,7 @@ const Header = () => {
           speed="3s"
         >
           <Link className="btn btn-ghost text-xl" to={"/"}>
-            CodeAI
+            AlgoMaster
           </Link>
         </StarBorder>
       </div>

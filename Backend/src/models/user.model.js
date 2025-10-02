@@ -1,3 +1,8 @@
+/**
+ * AlgoMaster User Model
+ * Defines user schema for the competitive programming platform
+ */
+
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const userScheme = new mongoose.Schema(

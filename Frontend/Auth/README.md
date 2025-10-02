@@ -1,9 +1,14 @@
-# Auth
+# AlgoMaster Frontend
 
-A modern React application with Progressive Web App (PWA) capabilities built with Vite.
+A modern competitive programming platform with social features, built with React and Progressive Web App (PWA) capabilities.
 
 ## 🚀 Features
 
+- 🏆 **Competitive Programming** - Solve algorithmic problems with real-time judging
+- 👥 **Social Features** - Like, favorite, comment, and connect with other coders
+- 🔍 **Discover Friends** - Find and connect with like-minded developers
+- 📊 **Analytics Dashboard** - Track your progress with detailed statistics
+- 🎯 **Problem Solving** - Comprehensive problem database with multiple difficulty levels
 - ⚡ **Vite** - Fast build tool and development server
 - ⚛️ **React 18** - Latest React with modern hooks
 - 🎨 **Tailwind** - Styling framework
@@ -11,7 +16,6 @@ A modern React application with Progressive Web App (PWA) capabilities built wit
 - 📱 **PWA Ready** - Installable, offline-capable app
 - 🔄 **Auto-updates** - Service worker with auto-update functionality
 - 📊 **Caching Strategy** - Smart caching for better performance
-
 
 ## 📋 Prerequisites
 
@@ -21,6 +25,7 @@ A modern React application with Progressive Web App (PWA) capabilities built wit
 ## 🛠️ Installation
 
 1. Navigate to the project directory:
+
    ```bash
    cd Auth
    ```
@@ -33,17 +38,21 @@ A modern React application with Progressive Web App (PWA) capabilities built wit
 ## 🏃‍♂️ Running the Application
 
 ### Development Mode
+
 ```bash
 npm run dev
 ```
+
 The app will be available at `http://localhost:5173`
 
 ### Production Build
+
 ```bash
 npm run build
 ```
 
 ### Preview Production Build
+
 ```bash
 npm run preview
 ```
@@ -51,11 +60,14 @@ npm run preview
 ## 📱 PWA Features
 
 ### Installation
+
 - **Desktop**: Look for the install icon in the address bar or use the "Install App" button
 - **Mobile**: Use "Add to Home Screen" option in your browser menu
 
 ### Offline Support
+
 This app works offline thanks to service worker caching:
+
 - Static assets are cached automatically
 - API responses are cached with NetworkFirst strategy
 - Fallback pages for offline scenarios
@@ -63,6 +75,7 @@ This app works offline thanks to service worker caching:
 ### Testing PWA Features
 
 1. **Install Prompt Testing**:
+
    ```bash
    # Serve the built app locally
    npm run build
@@ -70,6 +83,7 @@ This app works offline thanks to service worker caching:
    ```
 
 2. **Service Worker Testing**:
+
    - Open DevTools → Application → Service Workers
    - Check if SW is registered and active
 
@@ -83,6 +97,7 @@ This app works offline thanks to service worker caching:
 ⚠️ **Important**: Replace the placeholder SVG icons with proper PNG icons:
 
 1. Replace these files in `public/` folder:
+
    - `pwa-192x192.svg` → `pwa-192x192.png`
    - `pwa-512x512.svg` → `pwa-512x512.png`
    - `apple-touch-icon.svg` → `apple-touch-icon.png`
@@ -143,18 +158,21 @@ This project uses **Tailwind** for styling:
 ## 🚀 Deployment
 
 ### Vercel
+
 ```bash
 npm install -g vercel
 vercel --prod
 ```
 
 ### Netlify
+
 ```bash
 npm run build
 # Upload dist/ folder to Netlify
 ```
 
 ### PWA Deployment Checklist
+
 - ✅ Build with `npm run build`
 - ✅ Serve over HTTPS
 - ✅ Test service worker registration

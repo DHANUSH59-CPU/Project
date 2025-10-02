@@ -1,3 +1,8 @@
+/**
+ * AlgoMaster Authentication Controller
+ * Handles user registration, login, and authentication
+ */
+
 const User = require("../models/user.model");
 const Submission = require("../models/submission.model");
 const Like = require("../models/like.model");

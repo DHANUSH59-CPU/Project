@@ -1,3 +1,8 @@
+/**
+ * AlgoMaster Problem Model
+ * Defines problem schema for the competitive programming platform
+ */
+
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 

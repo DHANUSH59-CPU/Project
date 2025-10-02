@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "algomaster-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "AlgoMaster - Competitive Programming Platform Backend API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

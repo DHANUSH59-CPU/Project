@@ -1,7 +1,10 @@
+/**
+ * AlgoMaster Backend API
+ * Competitive Programming Platform with Social Features
+ */
+
 const express = require("express");
-
 const cors = require("cors");
-
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 

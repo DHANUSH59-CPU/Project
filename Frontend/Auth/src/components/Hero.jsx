@@ -18,11 +18,11 @@ const Hero = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-6xl font-bold text-white drop-shadow-2xl mb-6">
-              Welcome to CodeAI
+              Welcome to AlgoMaster
             </h1>
             <p className="py-6 text-xl text-white/90 drop-shadow-lg">
-              Join CodeAI to practice coding, compete with peers, and elevate
-              your problem-solving abilities to new heights.
+              Master algorithms, connect with coders, and elevate your
+              problem-solving abilities to new heights.
             </p>
             <motion.button
               className="btn btn-primary btn-lg text-lg px-8 py-3 shadow-2xl"
