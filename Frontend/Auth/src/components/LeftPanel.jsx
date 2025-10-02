@@ -102,11 +102,11 @@ const tabsConfig = [
 const getProblemPoints = (difficulty) => {
   switch (difficulty) {
     case "easy":
-      return 2;
+      return 10;
     case "medium":
-      return 4;
+      return 25;
     case "hard":
-      return 8;
+      return 50;
     default:
       return 0;
   }

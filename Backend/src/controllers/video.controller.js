@@ -23,11 +23,9 @@ const getVideoSignature = async (req, res) => {
     });
 
     if (existingVideo) {
-      return res
-        .status(409)
-        .json({
-          error: "Video Solution for the given problem already exists.",
-        });
+      return res.status(409).json({
+        error: "Video Solution for the given problem already exists.",
+      });
     }
 
     // Generate unique public_id for the video
@@ -88,11 +86,9 @@ const saveVideoMetaData = async (req, res) => {
     });
 
     if (existingVideo) {
-      return res
-        .status(409)
-        .json({
-          error: "Video Solution for the given problem already exists.",
-        });
+      return res.status(409).json({
+        error: "Video Solution for the given problem already exists.",
+      });
     }
 
     const thumbnailUrl = cloudinary.url(cloudinaryResource.public_id, {
@@ -178,16 +174,33 @@ const getVideoSolution = async (req, res) => {
 const deleteVideoSolution = async (req, res) => {
   try {
     const { problemId } = req.params;
+    const userId = req.userId;
+    const userRole = req.userRole;
 
     // verify if given problem id has a valid type
     if (!mongoose.Types.ObjectId.isValid(problemId))
       return res.status(400).send({ error: "Invalid Problem ID provided." });
 
-    const video = await SolutionVideo.findOneAndDelete({ problem: problemId });
+    // Find the video first to check ownership
+    const video = await SolutionVideo.findOne({ problem: problemId });
 
     if (!video) {
       return res.status(404).json({ error: "Video not found" });
     }
+
+    // Check if user is admin or the uploader
+    const isAdmin = userRole === "admin";
+    const isUploader = video.user.toString() === userId;
+
+    if (!isAdmin && !isUploader) {
+      return res.status(403).json({
+        error:
+          "Unauthorized - Only admins or video uploaders can delete videos",
+      });
+    }
+
+    // Delete from database
+    await SolutionVideo.findByIdAndDelete(video._id);
 
     // Delete from Cloudinary
     await cloudinary.uploader.destroy(video.cloudinaryPublicId, {

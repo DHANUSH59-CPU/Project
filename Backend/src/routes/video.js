@@ -22,12 +22,7 @@ videoRouter.post(
   adminMiddleware,
   saveVideoMetaData
 );
-videoRouter.delete(
-  "/delete/:problemId",
-  userMiddleware,
-  adminMiddleware,
-  deleteVideoSolution
-);
+videoRouter.delete("/delete/:problemId", userMiddleware, deleteVideoSolution);
 
 // Public route (get video solution) - must come last
 videoRouter.get("/:problemId", getVideoSolution);

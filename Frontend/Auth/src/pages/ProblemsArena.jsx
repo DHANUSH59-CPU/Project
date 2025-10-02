@@ -97,6 +97,46 @@ const ProblemsArena = () => {
         <p className="text-base-content/70 text-center">
           Practice coding problems and improve your skills
         </p>
+
+        {/* Scoring System Info */}
+        <div className="mt-4 p-4 bg-base-200 rounded-lg border border-base-300">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-primary"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+              <span className="font-semibold text-base-content">
+                Point System:
+              </span>
+            </div>
+            <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-success rounded-full"></span>
+                <span className="text-base-content/70">
+                  Easy:{" "}
+                  <span className="font-semibold text-success">10 pts</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-warning rounded-full"></span>
+                <span className="text-base-content/70">
+                  Medium:{" "}
+                  <span className="font-semibold text-warning">25 pts</span>
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-error rounded-full"></span>
+                <span className="text-base-content/70">
+                  Hard: <span className="font-semibold text-error">50 pts</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}

@@ -11,9 +11,12 @@ const {
 // Helper function to calculate points based on difficulty
 const calculatePoints = (difficulty) => {
   const pointsMap = {
+    easy: 10,
+    medium: 25,
+    hard: 50,
     Easy: 10,
-    Medium: 20,
-    Hard: 30,
+    Medium: 25,
+    Hard: 50,
   };
   return pointsMap[difficulty] || 10;
 };
