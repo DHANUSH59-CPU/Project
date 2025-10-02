@@ -1,4 +1,4 @@
-# 🎯 Advanced Profile Components - HackForge Style
+# 🎯 Advanced Profile Components - CodeAI Style
 
 ## 📊 **Components Implemented:**
 
@@ -99,7 +99,7 @@ import YearlyActivityHeatMap from '../components/profile/YearlyActivityHeatMap';
 
 ## 🎯 **Key Benefits:**
 
-1. **Professional Appearance** - HackForge-style design with modern UI
+1. **Professional Appearance** - CodeAI-style design with modern UI
 2. **Rich Data Visualization** - Multiple chart types for comprehensive insights
 3. **Interactive Experience** - Hover effects, tooltips, and animations
 4. **Responsive Design** - Works perfectly on all devices
@@ -113,4 +113,4 @@ import YearlyActivityHeatMap from '../components/profile/YearlyActivityHeatMap';
 - **Tailwind CSS** - For styling and responsive design
 - **DaisyUI** - For component styling and theme
 
-The profile system now provides a **comprehensive, professional, and visually appealing** user experience similar to HackForge! 🎉
+The profile system now provides a **comprehensive, professional, and visually appealing** user experience for CodeAI! 🎉

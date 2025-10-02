@@ -18,6 +18,7 @@ const { profileRouter } = require("./routes/profile");
 const { activityRouter } = require("./routes/activity");
 const { socialRouter } = require("./routes/social");
 const videoRouter = require("./routes/video");
+const discoveryRouter = require("./routes/discovery");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -47,6 +48,7 @@ app.use("/profile", profileRouter);
 app.use("/activity", activityRouter);
 app.use("/social", socialRouter);
 app.use("/video", videoRouter);
+app.use("/", discoveryRouter);
 
 const InitizializeConnection = async () => {
   try {

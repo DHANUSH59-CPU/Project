@@ -1,11 +1,14 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../HackForge"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "../HackForge"
+    },
+    {
+      "path": "../Projects2"
+    }
+  ],
+  "settings": {}
 }

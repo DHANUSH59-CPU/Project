@@ -14,7 +14,6 @@ import ProblemsArena from "./pages/ProblemsArena";
 import Admin from "./components/adminPanel/Admin";
 import AdminPanel from "./components/adminPanel/AdminPanel";
 import UpdateProblem from "./components/adminPanel/UpdateProblem";
-import UpdateProblemTest from "./components/adminPanel/UpdateProblemTest";
 import DeleteProblem from "./components/adminPanel/DeleteProblem";
 import SprintManagement from "./components/adminPanel/SprintManagement";
 import ProblemSolvingPage from "./components/ProblemSolvingPage";
@@ -24,6 +23,9 @@ import SprintDetailPage from "./pages/SprintDetailPage";
 import SprintProgressPage from "./pages/SprintProgressPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import SocialDataPage from "./pages/SocialDataPage";
+import DiscoverFriends from "./pages/DiscoverFriends";
+import ConnectionRequests from "./pages/ConnectionRequests";
+import Connections from "./pages/Connections";
 
 export default function App() {
   const { isAuthenticated, loading, user } = useSelector(
@@ -76,6 +78,18 @@ export default function App() {
               <Route
                 path="/social/:type"
                 element={isAuthenticated ? <SocialDataPage /> : <Login />}
+              />
+              <Route
+                path="/discover"
+                element={isAuthenticated ? <DiscoverFriends /> : <Login />}
+              />
+              <Route
+                path="/requests"
+                element={isAuthenticated ? <ConnectionRequests /> : <Login />}
+              />
+              <Route
+                path="/connections"
+                element={isAuthenticated ? <Connections /> : <Login />}
               />
               <Route
                 path="/admin"
