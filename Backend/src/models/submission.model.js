@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { problemRouter } = require("../routes/problemRouter");
 const Schema = mongoose.Schema;
 
 const submissionSchema = new Schema(

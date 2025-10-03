@@ -280,16 +280,53 @@ const solvedAllProblemByuser = async (req, res) => {
 
 const submittedProblem = async (req, res) => {
   try {
-    const userId = req.result._id;
+    console.log("=== SUBMITTED PROBLEM ENDPOINT CALLED ===");
+    console.log("Request method:", req.method);
+    console.log("Request URL:", req.url);
+    console.log("Request params:", req.params);
+
+    const userId = req.userId; // Use req.userId instead of req.result._id
     const problemId = req.params.pid;
 
+    console.log(
+      "Fetching submissions for userId:",
+      userId,
+      "problemId:",
+      problemId
+    );
+    console.log("Request params:", req.params);
+    console.log("Request userId from middleware:", req.userId);
+
+    // Validate inputs
+    if (!userId) {
+      console.error("No userId found in request");
+      return res.status(400).json({ error: "User ID not found" });
+    }
+
+    if (!problemId) {
+      console.error("No problemId found in request");
+      return res.status(400).json({ error: "Problem ID not found" });
+    }
+
+    console.log("About to query Submission model...");
+    console.log("Query parameters:", { userId, problemId });
+    console.log("Submission model:", typeof Submission);
+    console.log("Submission.find method:", typeof Submission.find);
+
     const ans = await Submission.find({ userId, problemId });
+    console.log("Query completed successfully");
 
-    if (ans.length == 0) res.status(200).send("No Submission is persent");
+    console.log("Found submissions:", ans.length);
+    console.log("Submissions data:", ans);
 
-    res.status(200).send(ans);
+    // Always send an array, even if empty
+    res.status(200).json(ans);
   } catch (err) {
-    res.status(500).send("Internal Server Error");
+    console.error("Error fetching submissions:", err);
+    console.error("Error stack:", err.stack);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: err.message });
   }
 };
 

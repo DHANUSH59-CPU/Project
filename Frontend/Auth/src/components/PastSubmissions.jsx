@@ -119,11 +119,26 @@ function PastSubmissions({ problem }) {
   useEffect(() => {
     const getPastSubmissions = async () => {
       try {
+        console.log("Fetching submissions for problem:", problem._id);
         const response = await axiosClient.get(
           `/problem/submittedProblem/${problem._id}`
         );
 
-        const modifiedSubmissions = response.data.map((sub) => {
+        console.log("Submissions response:", response.data);
+
+        // Handle both array and string responses
+        let submissionsData = response.data;
+        if (typeof submissionsData === "string") {
+          console.log("Received string response, treating as empty array");
+          submissionsData = [];
+        }
+
+        if (!Array.isArray(submissionsData)) {
+          console.log("Response is not an array, treating as empty");
+          submissionsData = [];
+        }
+
+        const modifiedSubmissions = submissionsData.map((sub) => {
           const processedStatus = getProcessedStatus(sub.status);
 
           return {
@@ -141,9 +156,14 @@ function PastSubmissions({ problem }) {
           };
         });
 
+        console.log("Processed submissions:", modifiedSubmissions);
         setSubmissions(modifiedSubmissions);
       } catch (error) {
         console.error("Error fetching submissions:", error);
+        console.error("Error details:", error.response?.data);
+        console.error("Error status:", error.response?.status);
+        console.error("Error headers:", error.response?.headers);
+        console.error("Full error response:", error.response);
         setSubmissions([]);
       }
     };
