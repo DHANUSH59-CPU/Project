@@ -55,8 +55,8 @@ const CollaborativeEditorPage = () => {
     // For production debugging - hardcode production URL
     const isProduction = window.location.hostname !== "localhost";
     const finalSocketUrl = isProduction
-      ? "https://algomaster-backend.onrender.com"
-      : "https://algomaster-backend.onrender.com";
+      ? "https://algomaster-backend.onrender.com" // ✅ Render backend
+      : "http://localhost:5000"; // ✅ Local development
 
     console.log("Socket.IO connecting to:", finalSocketUrl);
     console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
