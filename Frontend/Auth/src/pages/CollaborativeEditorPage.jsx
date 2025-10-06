@@ -65,6 +65,10 @@ const CollaborativeEditorPage = () => {
       timeout: 20000,
       withCredentials: true,
       forceNew: true,
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
     setSocket(newSocket);
 
@@ -95,10 +99,27 @@ const CollaborativeEditorPage = () => {
       }
     });
 
-    newSocket.on("disconnect", () => {
-      console.log("Disconnected from server");
+    newSocket.on("disconnect", (reason) => {
+      console.log("Disconnected from server:", reason);
       setConnected(false);
-      addMessage("❌ Disconnected from server");
+      addMessage(`❌ Disconnected from server: ${reason}`);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+      setConnected(false);
+      addMessage(`❌ Connection error: ${error.message}`);
+    });
+
+    newSocket.on("reconnect", (attemptNumber) => {
+      console.log("Reconnected after", attemptNumber, "attempts");
+      setConnected(true);
+      addMessage(`✅ Reconnected after ${attemptNumber} attempts`);
+    });
+
+    newSocket.on("reconnect_error", (error) => {
+      console.error("Reconnection error:", error);
+      addMessage(`❌ Reconnection failed: ${error.message}`);
     });
 
     // Room events
