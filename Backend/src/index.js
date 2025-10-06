@@ -59,7 +59,7 @@ app.use(cookieParser()); // Used to deconstruct the token from cookie
 app.use(
   cors({
     origin: [
-      "https://algomaster-frontend-xy3n.onrender.com/api",
+      "https://algomaster-frontend-xy3n.onrender.com",
       "http://localhost:5173",
       "http://localhost:5174",
       "http://127.0.0.1:5173",
