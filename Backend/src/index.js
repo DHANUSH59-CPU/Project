@@ -76,94 +76,70 @@ const io = new Server(server, {
   allowEIO3: true,
 });
 
+// Real-Time Collaboration Logic (SmartCode Implementation)
+const rooms = new Map();
+
 io.on("connection", (socket) => {
-  console.log("✅ New user connected:", socket.id);
+  console.log("User Connected", socket.id);
 
-  // Initialize user info
-  socket.userInfo = {
-    username: "Anonymous User",
-    userId: null,
-  };
+  let currentRoom = null;
+  let currentUser = null;
 
-  /* --------------------- Set user info --------------------- */
-  socket.on("set-user-info", (data) => {
-    socket.userInfo.username = data.username || "Anonymous User";
-    socket.userInfo.userId = data.userId || null;
-    console.log(
-      `👤 User info set for ${socket.id}: ${socket.userInfo.username}`
-    );
+  socket.on("join", ({ roomId, userName }) => {
+    if (currentRoom) {
+      socket.leave(currentRoom);
+      rooms.get(currentRoom)?.delete(currentUser);
+      io.to(currentRoom).emit(
+        "userJoined",
+        Array.from(rooms.get(currentRoom) || [])
+      );
+    }
+
+    currentRoom = roomId;
+    currentUser = userName;
+
+    socket.join(roomId);
+    if (!rooms.has(roomId)) {
+      rooms.set(roomId, new Set());
+    }
+    rooms.get(roomId).add(userName);
+    io.to(roomId).emit("userJoined", Array.from(rooms.get(roomId)));
   });
 
-  /* --------------------- Join Room --------------------- */
-  socket.on("join-room", ({ roomId }) => {
-    if (!roomId) return;
-    const trimmedRoom = roomId.trim();
-    socket.join(trimmedRoom);
-    console.log(`🟢 ${socket.userInfo.username} joined room ${trimmedRoom}`);
-
-    socket.to(trimmedRoom).emit("user-joined", {
-      message: `${socket.userInfo.username} joined the room`,
-      socketId: socket.id,
-      username: socket.userInfo.username,
-      userId: socket.userInfo.userId,
-    });
+  socket.on("codeChange", ({ roomId, code }) => {
+    socket.to(roomId).emit("codeUpdate", code);
   });
 
-  /* --------------------- Leave Room --------------------- */
-  socket.on("leave-room", ({ roomId }) => {
-    if (!roomId) return;
-    socket.leave(roomId);
-    console.log(`🔴 ${socket.userInfo.username} left room ${roomId}`);
-
-    socket.to(roomId).emit("user-left", {
-      message: `${socket.userInfo.username} left the room`,
-      socketId: socket.id,
-      username: socket.userInfo.username,
-      userId: socket.userInfo.userId,
-    });
+  socket.on("typing", ({ roomId, userName }) => {
+    socket.to(roomId).emit("userTyping", userName);
   });
 
-  /* --------------------- Code Change --------------------- */
-  socket.on("code-change", ({ roomId, code }) => {
-    if (!roomId || typeof code !== "string") return;
-    console.log(
-      `💻 Code update in room ${roomId} by ${socket.userInfo.username}`
-    );
-    socket.to(roomId).emit("code-update", {
-      code,
-      from: socket.id,
-      username: socket.userInfo.username,
-      timestamp: new Date().toISOString(),
-    });
+  socket.on("languageChange", ({ roomId, language }) => {
+    io.to(roomId).emit("languageUpdate", language);
   });
 
-  /* --------------------- Language Change --------------------- */
-  socket.on("language-change", ({ roomId, language }) => {
-    if (!roomId) return;
-    console.log(`🌐 Language change in ${roomId}: ${language}`);
-    socket.to(roomId).emit("language-update", {
-      language,
-      from: socket.id,
-      username: socket.userInfo.username,
-    });
+  socket.on("leaveRoom", () => {
+    if (currentRoom && currentUser) {
+      rooms.get(currentRoom)?.delete(currentUser);
+      io.to(currentRoom).emit(
+        "userJoined",
+        Array.from(rooms.get(currentRoom) || [])
+      );
+      socket.leave(currentRoom);
+      currentRoom = null;
+      currentUser = null;
+    }
   });
 
-  /* --------------------- Message Chat --------------------- */
-  socket.on("message", (message) => {
-    const rooms = Array.from(socket.rooms).filter((r) => r !== socket.id);
-    rooms.forEach((roomId) => {
-      socket.to(roomId).emit("message", {
-        message,
-        from: socket.id,
-        username: socket.userInfo.username,
-        timestamp: new Date().toISOString(),
-      });
-    });
-  });
-
-  /* --------------------- Disconnect --------------------- */
-  socket.on("disconnect", (reason) => {
-    console.log(`⚠️ User disconnected: ${socket.id} (${reason})`);
+  socket.on("disconnect", () => {
+    if (currentRoom && currentUser) {
+      rooms.get(currentRoom)?.delete(currentUser);
+      io.to(currentRoom).emit(
+        "userJoined",
+        Array.from(rooms.get(currentRoom) || [])
+      );
+    }
+    console.log("User Disconnected");
   });
 });
 

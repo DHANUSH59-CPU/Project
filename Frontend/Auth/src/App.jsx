@@ -26,8 +26,7 @@ import SocialDataPage from "./pages/SocialDataPage";
 import DiscoverFriends from "./pages/DiscoverFriends";
 import ConnectionRequests from "./pages/ConnectionRequests";
 import Connections from "./pages/Connections";
-import CollaborativeEditorPage from "./pages/CollaborativeEditorPage";
-import JoinRoomPage from "./pages/JoinRoomPage";
+import GroupCoding from "./pages/GroupCoding";
 
 export default function App() {
   const { isAuthenticated, loading, user } = useSelector(
@@ -93,10 +92,13 @@ export default function App() {
                 path="/connections"
                 element={isAuthenticated ? <Connections /> : <Login />}
               />
-              <Route path="/collaborate" element={<JoinRoomPage />} />
+              <Route
+                path="/collaborate"
+                element={isAuthenticated ? <GroupCoding /> : <Login />}
+              />
               <Route
                 path="/collaborate/:roomId"
-                element={<CollaborativeEditorPage />}
+                element={isAuthenticated ? <GroupCoding /> : <Login />}
               />
               <Route
                 path="/admin"
