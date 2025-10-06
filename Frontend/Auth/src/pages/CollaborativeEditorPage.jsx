@@ -52,10 +52,19 @@ const CollaborativeEditorPage = () => {
       ? import.meta.env.VITE_API_URL.replace("/api", "")
       : "http://localhost:5000";
 
-    const newSocket = io(socketUrl, {
+    // For production debugging - use environment variable if available
+    const isProduction = window.location.hostname !== "localhost";
+    const finalSocketUrl = isProduction ? socketUrl : "http://localhost:5000";
+
+    console.log("Socket.IO connecting to:", finalSocketUrl);
+    console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
+    console.log("Is production:", isProduction);
+
+    const newSocket = io(finalSocketUrl, {
       transports: ["polling", "websocket"],
       timeout: 20000,
       withCredentials: true,
+      forceNew: true,
     });
     setSocket(newSocket);
 
