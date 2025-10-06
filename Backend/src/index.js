@@ -31,52 +31,42 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = createServer(app);
 
-// Simple Socket.IO setup (no authentication for now)
-const io = new Server(server, {
-  cors: {
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://devmtxh.xyz",
-      "https://devmtxh.xyz",
-      "https://algomaster-frontend-xy3n.onrender.com",
-    ], // Allow both frontend ports and production domain
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-  allowEIO3: true, // Enable Engine.IO v3 compatibility
-  transports: ["polling", "websocket"],
-  pingTimeout: 60000,
-  pingInterval: 25000,
-  serveClient: false,
-  allowUpgrades: true,
-  cookie: false,
-});
-
+/* -------------------------- ✅ FIXED CORS CONFIG -------------------------- */
 app.use(express.json());
-app.use(cookieParser()); // Used to deconstruct the token from cookie
+app.use(cookieParser());
 
 app.use(
   cors({
     origin: [
-      "https://algomaster-frontend-xy3n.onrender.com",
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:5174",
-      "http://devmtxh.xyz",
-      "https://devmtxh.xyz",
-    ], // Allow both frontend ports, localhost variants, and production domain
-    credentials: true,
+      "https://algomaster-frontend-xy3n.onrender.com", // Render frontend
+      "https://devmtxh.xyz", // optional custom domain
+      "http://localhost:5173", // local dev
+    ],
+    credentials: true, // <– REQUIRED for cookies
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
+/* ------------------------------------------------------------------------- */
 
-// app.use("/", (req, res) => {
-//   res.send("Hello world");
-// });
+/* --------------------------- ✅ SOCKET.IO CONFIG -------------------------- */
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "https://algomaster-frontend-xy3n.onrender.com",
+      "https://devmtxh.xyz",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+  transports: ["polling", "websocket"],
+  pingTimeout: 60000,
+  pingInterval: 25000,
+});
+/* ------------------------------------------------------------------------- */
 
+/* --------------------------- ✅ ROUTES SETUP ------------------------------ */
 app.use("/user", authRouter);
 app.use("/problem", problemRouter);
 app.use("/submission", submitRouter);
@@ -88,44 +78,37 @@ app.use("/activity", activityRouter);
 app.use("/social", socialRouter);
 app.use("/video", videoRouter);
 app.use("/", discoveryRouter);
+/* ------------------------------------------------------------------------- */
 
+/* -------------------------- ✅ DATABASE + REDIS -------------------------- */
 const InitizializeConnection = async () => {
   try {
-    // Connect to MongoDB
     await connectDB();
-    console.log("MongoDB Connected");
+    console.log("✅ MongoDB Connected");
 
-    // Try to connect to Redis (optional)
     try {
       await redisClient.connect();
-      console.log("Redis Connected");
+      console.log("✅ Redis Connected");
     } catch (redisError) {
-      console.log(
-        "Redis connection failed, continuing without Redis:",
-        redisError.message
-      );
+      console.log("⚠️ Redis connection failed:", redisError.message);
     }
 
-    console.log("DB'S Connected");
+    console.log("✅ Databases initialized");
 
-    // Simple Socket.IO connection handler with room logic
+    /* ------------------------- SOCKET.IO HANDLERS ------------------------- */
     io.on("connection", (socket) => {
       console.log("User connected:", socket.id);
-      console.log("Socket transport:", socket.conn.transport.name);
-      console.log("Socket ready state:", socket.conn.readyState);
 
-      // Store user info when they connect
       socket.userInfo = {
         socketId: socket.id,
-        username: "Anonymous User", // Default until we get real user info
+        username: "Anonymous",
         userId: null,
       };
 
-      // Set user info
       socket.on("set-user-info", (data) => {
         socket.userInfo = {
           socketId: socket.id,
-          username: data.username || "Anonymous User",
+          username: data.username || "Anonymous",
           userId: data.userId || null,
         };
         console.log(
@@ -133,137 +116,69 @@ const InitizializeConnection = async () => {
         );
       });
 
-      // Join room
-      socket.on("join-room", (data) => {
-        const { roomId } = data;
+      socket.on("join-room", ({ roomId }) => {
         if (roomId) {
           socket.join(roomId);
-          console.log(
-            `User ${socket.userInfo.username} (${socket.id}) joined room: ${roomId}`
-          );
+          console.log(`${socket.userInfo.username} joined room: ${roomId}`);
 
-          // Get all users currently in the room
-          const room = io.sockets.adapter.rooms.get(roomId);
-          const usersInRoom = [];
-          if (room) {
-            for (const socketId of room) {
-              const userSocket = io.sockets.sockets.get(socketId);
-              if (userSocket && userSocket.userInfo) {
-                usersInRoom.push({
-                  socketId: userSocket.id,
-                  username: userSocket.userInfo.username,
-                  userId: userSocket.userInfo.userId,
-                });
-              }
-            }
-          }
-
-          // Notify others in the room
           socket.to(roomId).emit("user-joined", {
             message: `${socket.userInfo.username} joined the room`,
-            socketId: socket.id,
             username: socket.userInfo.username,
             userId: socket.userInfo.userId,
-          });
-
-          // Send confirmation to the user with current room users
-          socket.emit("room-joined", {
-            roomId,
-            message: `You joined room: ${roomId}`,
-            usersInRoom: usersInRoom,
           });
         }
       });
 
-      // Leave room
-      socket.on("leave-room", (data) => {
-        const { roomId } = data;
+      socket.on("leave-room", ({ roomId }) => {
         if (roomId) {
           socket.leave(roomId);
-          console.log(
-            `User ${socket.userInfo.username} (${socket.id}) left room: ${roomId}`
-          );
-
-          // Notify others in the room
+          console.log(`${socket.userInfo.username} left room: ${roomId}`);
           socket.to(roomId).emit("user-left", {
             message: `${socket.userInfo.username} left the room`,
-            socketId: socket.id,
-            username: socket.userInfo.username,
-            userId: socket.userInfo.userId,
           });
         }
       });
 
-      // Handle messages
       socket.on("message", (data) => {
         console.log(`Message from ${socket.userInfo.username}:`, data);
-
-        // Broadcast to all clients in the same room
         const rooms = Array.from(socket.rooms);
         rooms.forEach((room) => {
           if (room !== socket.id) {
-            // Don't broadcast to the sender's personal room
             socket.to(room).emit("message", {
               message: data,
-              from: socket.id,
               username: socket.userInfo.username,
-              userId: socket.userInfo.userId,
               timestamp: new Date().toISOString(),
             });
           }
         });
       });
 
-      // Handle code changes
-      socket.on("code-change", (data) => {
-        const { roomId, code } = data;
-        console.log(
-          `Code change by ${socket.userInfo.username} in room ${roomId}:`,
-          code.substring(0, 50) + "..."
-        );
-
-        // Broadcast code changes to all clients in the same room
+      socket.on("code-change", ({ roomId, code }) => {
         socket.to(roomId).emit("code-update", {
           code,
-          from: socket.id,
           username: socket.userInfo.username,
-          userId: socket.userInfo.userId,
-          timestamp: new Date().toISOString(),
         });
       });
 
-      // Handle language changes
-      socket.on("language-change", (data) => {
-        const { roomId, language } = data;
-        console.log(
-          `Language change by ${socket.userInfo.username} in room ${roomId}: ${language}`
-        );
-
-        // Broadcast language changes to all clients in the same room
+      socket.on("language-change", ({ roomId, language }) => {
         socket.to(roomId).emit("language-update", {
           language,
-          from: socket.id,
           username: socket.userInfo.username,
-          userId: socket.userInfo.userId,
-          timestamp: new Date().toISOString(),
         });
       });
 
-      socket.on("disconnect", (reason) => {
-        console.log("User disconnected:", socket.id, "Reason:", reason);
-      });
-
-      socket.on("error", (error) => {
-        console.error("Socket error:", socket.id, error);
+      socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
       });
     });
+
+    /* --------------------------------------------------------------------- */
 
     server.listen(PORT, () => {
-      console.log("Server is listening on port ", PORT);
-      console.log("Socket.IO server is ready for connections");
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (err) {
-    console.log("Error : ", err.message);
+    console.log("❌ Error starting server:", err.message);
   }
 };
 
