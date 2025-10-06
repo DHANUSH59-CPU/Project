@@ -34,7 +34,7 @@
     "recharts": "^3.2.1",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.13",
-    "three": "^0.155.0",
+    "three": "^0.180.0",
     "vite-plugin-pwa": "^1.0.3",
     "workbox-window": "^7.3.0",
     "zod": "^4.1.8"
