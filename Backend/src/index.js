@@ -39,6 +39,7 @@ const io = new Server(server, {
       "http://localhost:5174",
       "http://devmtxh.xyz",
       "https://devmtxh.xyz",
+      "https://algomaster-frontend-xy3n.onrender.com",
     ], // Allow both frontend ports and production domain
     methods: ["GET", "POST"],
     credentials: true,
@@ -58,7 +59,7 @@ app.use(cookieParser()); // Used to deconstruct the token from cookie
 app.use(
   cors({
     origin: [
-      "https://algomaster-frontend-xy3n.onrender.com",
+      "https://algomaster-frontend-xy3n.onrender.com/api",
       "http://localhost:5173",
       "http://localhost:5174",
       "http://127.0.0.1:5173",
