@@ -73,7 +73,7 @@ const io = new Server(server, {
     credentials: true,
   },
   transports: ["websocket"], // ✅ Force pure WebSocket for Render
-  allowEIO3: false,
+  allowEIO3: true,
 });
 
 io.on("connection", (socket) => {

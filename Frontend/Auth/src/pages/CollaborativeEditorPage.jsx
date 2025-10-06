@@ -31,12 +31,14 @@ const CollaborativeEditorPage = () => {
 
   /* -------------------- SOCKET CONNECTION -------------------- */
   useEffect(() => {
-    const newSocket = io(backendURL, {
-      transports: ["websocket"], // ✅ force WebSocket
+    const newSocket = io("https://algomaster-backend.onrender.com", {
+      transports: ["websocket"], // ✅ Only use WebSocket
+      upgrade: false, // ✅ Don't try polling first
       withCredentials: true,
       reconnection: true,
       reconnectionAttempts: 5,
     });
+
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
