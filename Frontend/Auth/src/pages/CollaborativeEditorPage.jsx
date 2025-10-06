@@ -50,11 +50,11 @@ const CollaborativeEditorPage = () => {
     // Create socket connection - use environment variable or fallback to localhost
     const socketUrl = import.meta.env.VITE_API_URL
       ? import.meta.env.VITE_API_URL.replace("/api", "")
-      : "http://localhost:5000";
+      : "http://localhost:5001";
 
     // For production debugging - use environment variable if available
     const isProduction = window.location.hostname !== "localhost";
-    const finalSocketUrl = isProduction ? socketUrl : "http://localhost:5000";
+    const finalSocketUrl = isProduction ? socketUrl : "http://localhost:5001";
 
     console.log("Socket.IO connecting to:", finalSocketUrl);
     console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
