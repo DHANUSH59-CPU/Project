@@ -47,8 +47,12 @@ const CollaborativeEditorPage = () => {
       setRoomId(urlRoomId);
     }
 
-    // Create socket connection
-    const newSocket = io("http://localhost:5000", {
+    // Create socket connection - use environment variable or fallback to localhost
+    const socketUrl = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace("/api", "")
+      : "http://localhost:5000";
+
+    const newSocket = io(socketUrl, {
       transports: ["polling", "websocket"],
       timeout: 20000,
       withCredentials: true,
