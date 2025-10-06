@@ -47,6 +47,9 @@ const io = new Server(server, {
   transports: ["polling", "websocket"],
   pingTimeout: 60000,
   pingInterval: 25000,
+  serveClient: false,
+  allowUpgrades: true,
+  cookie: false,
 });
 
 app.use(express.json());
@@ -106,6 +109,8 @@ const InitizializeConnection = async () => {
     // Simple Socket.IO connection handler with room logic
     io.on("connection", (socket) => {
       console.log("User connected:", socket.id);
+      console.log("Socket transport:", socket.conn.transport.name);
+      console.log("Socket ready state:", socket.conn.readyState);
 
       // Store user info when they connect
       socket.userInfo = {
@@ -242,8 +247,12 @@ const InitizializeConnection = async () => {
         });
       });
 
-      socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
+      socket.on("disconnect", (reason) => {
+        console.log("User disconnected:", socket.id, "Reason:", reason);
+      });
+
+      socket.on("error", (error) => {
+        console.error("Socket error:", socket.id, error);
       });
     });
 
