@@ -43,6 +43,10 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
+  allowEIO3: true, // Enable Engine.IO v3 compatibility
+  transports: ["polling", "websocket"],
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 app.use(express.json());
