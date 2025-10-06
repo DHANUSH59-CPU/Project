@@ -548,8 +548,10 @@ const CollaborativeEditorPage = () => {
                         scrollBeyondLastLine: false,
                         wordWrap: "on",
                         automaticLayout: true,
-                        readOnly: !currentRoom,
-                        placeholder: "Start coding together...",
+                        readOnly: false,
+                        placeholder: currentRoom
+                          ? "Start coding together..."
+                          : "Start coding... (Join a room to collaborate)",
                         fontLigatures: true,
                         cursorBlinking: "smooth",
                         cursorSmoothCaretAnimation: true,
