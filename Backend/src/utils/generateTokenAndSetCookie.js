@@ -6,10 +6,10 @@ const generateTokenAndSetCookie = async (res, userId, role) => {
   });
 
   res.cookie("token", token, {
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 7 days
-    httpOnly: true, // Prevent XSS attacks
-    sameSite: "none", // CSRF protection
-    secure: process.env.NODE_ENV === "production", // HTTPS only in production
+    maxAge: 7 * 24 * 60 * 60 * 1000, // ✅ 7 days
+    httpOnly: true, // ✅ Prevent JS access (security)
+    sameSite: "none", // ✅ Required for cross-site
+    secure: true, // ✅ Always true (Render is HTTPS)
   });
 
   return token;
