@@ -1,0 +1,279 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@plugin "daisyui" {
+  themes: dark --default;
+}
+
+#lights {
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#lights canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* Star Border Animation */
+.star-border-animation {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--star-color, #00ffff),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: star-border var(--animation-speed, 5s) linear infinite;
+  border-radius: inherit;
+}
+
+.star-border-animation::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background: inherit;
+  border-radius: inherit;
+  background: var(--tw-gradient-from, transparent);
+}
+
+@keyframes star-border {
+  0% {
+    background-position: -200% 0;
+    box-shadow: 0 0 0 1px var(--star-color, #00ffff),
+      0 0 10px var(--star-color, #00ffff), 0 0 20px var(--star-color, #00ffff);
+  }
+  50% {
+    background-position: 200% 0;
+    box-shadow: 0 0 0 2px var(--star-color, #00ffff),
+      0 0 15px var(--star-color, #00ffff), 0 0 30px var(--star-color, #00ffff),
+      0 0 40px var(--star-color, #00ffff);
+  }
+  100% {
+    background-position: -200% 0;
+    box-shadow: 0 0 0 1px var(--star-color, #00ffff),
+      0 0 10px var(--star-color, #00ffff), 0 0 20px var(--star-color, #00ffff);
+  }
+}
+
+/* Hover effect for star border */
+.star-border-animation:hover {
+  animation-duration: calc(var(--animation-speed, 5s) / 2);
+}
+
+/* Additional glow effect */
+.star-border-glow {
+  position: relative;
+}
+
+.star-border-glow::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(
+    circle,
+    var(--star-color, #00ffff) 0%,
+    transparent 70%
+  );
+  border-radius: inherit;
+  opacity: 0.3;
+  z-index: -1;
+  animation: pulse-glow var(--animation-speed, 5s) ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+/* Submission Result View Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced submission result animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.4);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Success animation classes */
+.success-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.success-bounce {
+  animation: bounce 1s ease-in-out;
+}
+
+.shimmer-effect {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* New animations for UpdateProblem page */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out;
+}
+
+/* Glassmorphism effects */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-effect-strong {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Enhanced form input styles */
+.form-input-enhanced {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.form-input-enhanced:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.5s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name": "AlgoMaster"
+    },
+    {
+      "path": "../HackForge",
+      "name": "HackForge"
+    },
+    {
+      "path": "../Projects2",
+      "name": "Projects2"
+    }
+  ],
+  "settings": {
+    "workbench.colorTheme": "Dark+",
+    "editor.fontSize": 14,
+    "editor.tabSize": 2
+  }
+}
