@@ -34,7 +34,12 @@ const server = createServer(app);
 // Simple Socket.IO setup (no authentication for now)
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:5174"], // Allow both frontend ports
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "http://devmtxh.xyz",
+      "https://devmtxh.xyz",
+    ], // Allow both frontend ports and production domain
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -50,7 +55,9 @@ app.use(
       "http://localhost:5174",
       "http://127.0.0.1:5173",
       "http://127.0.0.1:5174",
-    ], // Allow both frontend ports and localhost variants
+      "http://devmtxh.xyz",
+      "https://devmtxh.xyz",
+    ], // Allow both frontend ports, localhost variants, and production domain
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
