@@ -52,8 +52,8 @@ const Hero = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          CodeAI provides a comprehensive suite of tools and resources to help
-          you on your coding journey.
+          AlgoMaster provides a comprehensive suite of tools and resources to
+          help you on your coding journey.
         </motion.p>
 
         {/* Enhanced Feature Cards */}

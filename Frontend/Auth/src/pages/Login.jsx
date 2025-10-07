@@ -54,7 +54,7 @@ const Login = () => {
         <div className="text-center lg:text-left">
           <h1 className="text-5xl font-bold">Login now!</h1>
           <p className="py-6">
-            Join CodeAI to practice coding, compete with peers, and elevate your
+            Join AlgoMaster to practice coding, compete with peers, and elevate your
             problem-solving abilities to new heights.
           </p>
         </div>
