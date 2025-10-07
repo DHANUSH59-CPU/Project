@@ -8,7 +8,7 @@ const Header = () => {
   const { user } = useSelector((state) => state.authSlice);
 
   return (
-    <div className="navbar bg-base-100/20 backdrop-blur-md shadow-2xl relative z-50">
+    <div className="navbar bg-base-100/20 backdrop-blur-md shadow-2xl fixed top-0 left-0 right-0 z-50">
       <div className="flex-1">
         <StarBorder
           as="div"
