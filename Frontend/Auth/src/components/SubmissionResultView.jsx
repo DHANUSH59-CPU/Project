@@ -1,159 +1,117 @@
 import { useState, useEffect } from "react";
 
 const SubmissionResultView = ({ submissionResult, onClose }) => {
-  const [animatedPassedCases, setAnimatedPassedCases] = useState(0);
-  const [showStatusIcon, setShowStatusIcon] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const { accepted, totalTestCases, passedTestCases, runtime, memory } =
     submissionResult;
   const isSuccess = accepted;
 
   useEffect(() => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 1;
-      setAnimatedPassedCases(Math.min(progress, passedTestCases || 0));
-      if (progress >= (passedTestCases || 0)) {
-        clearInterval(interval);
-        setTimeout(() => setShowStatusIcon(true), 200);
-      }
-    }, 50);
-    return () => clearInterval(interval);
-  }, [passedTestCases]);
+    setIsVisible(true);
+  }, []);
 
+  // Add keyboard shortcut support
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+      }
     };
+
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  const statusColorClass = isSuccess ? "text-success" : "text-error";
-  const circleStrokeClass = isSuccess ? "stroke-success" : "stroke-error";
-
-  const circumference = 2 * Math.PI * 60;
-  const strokeDashoffset =
-    circumference - (animatedPassedCases / totalTestCases) * circumference;
-
   return (
     <div
-      className="w-full flex flex-col flex-grow p-8 bg-gradient-to-br from-base-100 to-base-200 min-h-screen"
-      style={{ animation: "fadeIn 0.5s ease-in-out forwards" }}
+      className={`w-full flex flex-col flex-grow p-8 min-h-screen transition-all duration-1000 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } ${
+        isSuccess
+          ? "bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-950 dark:via-green-950 dark:to-teal-950"
+          : "bg-gradient-to-br from-red-50 via-rose-50 to-pink-50 dark:from-red-950 dark:via-rose-950 dark:to-pink-950"
+      }`}
+      style={{
+        backgroundImage: isSuccess
+          ? "radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)"
+          : "radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 50%)",
+      }}
     >
-      {/* Header */}
+      {/* Header with improved close button */}
       <div className="flex justify-between items-center mb-8">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <div
-            className={`p-4 rounded-full ${
-              isSuccess ? "bg-success/20" : "bg-error/20"
+            className={`p-6 rounded-2xl backdrop-blur-sm border transition-all duration-500 hover:scale-110 ${
+              isSuccess
+                ? "bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 border-emerald-200 dark:border-emerald-700"
+                : "bg-gradient-to-br from-red-100 to-rose-100 dark:from-red-900/30 dark:to-rose-900/30 border-red-200 dark:border-red-700"
             }`}
             style={{
-              filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
-              transform: "perspective(1000px) rotateX(15deg) rotateY(-5deg)",
+              filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.15))",
+              transform: "perspective(1000px) rotateX(10deg) rotateY(-3deg)",
             }}
           >
-            {/* ✅ 3D Icons */}
             {isSuccess ? (
               <svg
-                className="w-10 h-10"
+                className="w-12 h-12 text-emerald-600 dark:text-emerald-400 transition-all duration-300 hover:scale-110"
+                fill="currentColor"
                 viewBox="0 0 24 24"
                 style={{
-                  filter:
-                    "drop-shadow(0 4px 10px rgba(34,197,94,0.6)) drop-shadow(0 0 8px rgba(255,255,255,0.4))",
+                  filter: "drop-shadow(0 4px 8px rgba(34, 197, 94, 0.3))",
                 }}
               >
-                <defs>
-                  <linearGradient
-                    id="grad-success"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop offset="0%" stopColor="#4ade80" />
-                    <stop offset="100%" stopColor="#15803d" />
-                  </linearGradient>
-                </defs>
-                <path
-                  fill="url(#grad-success)"
-                  d="M9 16.17L4.83 12l-1.42 1.41L9 19l12-12-1.41-1.41z"
-                />
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
               </svg>
             ) : (
               <svg
-                className="w-10 h-10"
+                className="w-12 h-12 text-red-600 dark:text-red-400 transition-all duration-300 hover:scale-110"
+                fill="currentColor"
                 viewBox="0 0 24 24"
                 style={{
-                  filter:
-                    "drop-shadow(0 4px 10px rgba(239,68,68,0.6)) drop-shadow(0 0 8px rgba(255,255,255,0.4))",
+                  filter: "drop-shadow(0 4px 8px rgba(239, 68, 68, 0.3))",
                 }}
               >
-                <defs>
-                  <linearGradient
-                    id="grad-error"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop offset="0%" stopColor="#f87171" />
-                    <stop offset="100%" stopColor="#b91c1c" />
-                  </linearGradient>
-                </defs>
-                <path
-                  fill="url(#grad-error)"
-                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 
-                   5 17.59 6.41 19 12 13.41 17.59 19 
-                   19 17.59 13.41 12z"
-                />
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
               </svg>
             )}
           </div>
-          <div>
-            <h2 className={`text-4xl font-bold ${statusColorClass} mb-2`}>
+          <div className="space-y-3">
+            <h2
+              className={`text-5xl font-black tracking-tight mb-3 bg-gradient-to-r ${
+                isSuccess
+                  ? "from-emerald-600 to-green-600 dark:from-emerald-400 dark:to-green-400"
+                  : "from-red-600 to-rose-600 dark:from-red-400 dark:to-rose-400"
+              } bg-clip-text text-transparent`}
+            >
               {isSuccess ? "🎉 Accepted!" : "❌ Wrong Answer"}
             </h2>
-            <p className="text-base-content/70 text-lg">
+            <p className="text-slate-600 dark:text-slate-300 text-xl font-medium leading-relaxed">
               {isSuccess
                 ? "Congratulations! Your solution passed all test cases."
                 : "Your solution didn't pass all test cases. Try again!"}
             </p>
           </div>
         </div>
-
-        {/* Close Button 3D */}
         <button
           onClick={onClose}
-          className="btn btn-ghost btn-sm hover:btn-error hover:bg-error/10 transition-all duration-200 group"
+          className="group relative p-3 rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700 transition-all duration-300 hover:scale-105"
           aria-label="Close submission result"
           title="Close Result"
           style={{
-            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))",
+            filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.1))",
           }}
         >
           <svg
             className="w-6 h-6 group-hover:rotate-90 transition-transform duration-200"
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
             style={{
-              filter:
-                "drop-shadow(0 4px 10px rgba(0,0,0,0.4)) drop-shadow(0 0 6px rgba(255,255,255,0.4))",
+              filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
             }}
           >
-            <defs>
-              <linearGradient
-                id="grad-close"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="#f87171" />
-                <stop offset="100%" stopColor="#991b1b" />
-              </linearGradient>
-            </defs>
             <path
-              stroke="url(#grad-close)"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2.5}
@@ -163,96 +121,212 @@ const SubmissionResultView = ({ submissionResult, onClose }) => {
         </button>
       </div>
 
-      {/* Circular Progress */}
-      <div className="flex-grow flex flex-col items-center justify-center py-8">
-        <div className="relative w-40 h-40 mb-6">
-          <svg
-            className="w-full h-full transform -rotate-90 drop-shadow-lg"
-            viewBox="0 0 120 120"
-          >
-            <circle
-              className="stroke-base-300/30"
-              strokeWidth={12}
-              fill="transparent"
-              r={60}
-              cx={60}
-              cy={60}
-            />
-            <circle
-              className={`${circleStrokeClass} transition-all duration-500 ease-out drop-shadow-lg`}
-              strokeWidth={12}
-              strokeDasharray={circumference}
-              style={{ strokeDashoffset }}
-              strokeLinecap="round"
-              fill="transparent"
-              r={60}
-              cx={60}
-              cy={60}
-            />
-          </svg>
+      {/* Details */}
+      <div className="mt-auto pt-8 border-t border-slate-200 dark:border-slate-700">
+        <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-8 text-center">
+          Performance Metrics
+        </h3>
 
-          {/* Center Icon (3D check or X) */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            {showStatusIcon && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="group p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700 hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <div className="flex items-center gap-6">
               <div
-                className={`p-6 rounded-full ${
-                  isSuccess ? "bg-success/20" : "bg-error/20"
-                }`}
+                className="p-5 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-800/40 dark:to-indigo-800/40 group-hover:animate-pulse border border-blue-200 dark:border-blue-600"
                 style={{
-                  filter: isSuccess
-                    ? "drop-shadow(0 6px 10px rgba(34,197,94,0.6))"
-                    : "drop-shadow(0 6px 10px rgba(239,68,68,0.6))",
+                  filter: "drop-shadow(0 6px 12px rgba(59, 130, 246, 0.2))",
                   transform:
-                    "perspective(1000px) rotateX(10deg) rotateY(-5deg)",
+                    "perspective(1000px) rotateX(10deg) rotateY(-3deg)",
                 }}
               >
                 <svg
-                  className={`w-20 h-20`}
+                  className="w-10 h-10 text-blue-600 dark:text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                   style={{
-                    filter:
-                      "drop-shadow(0 4px 10px rgba(255,255,255,0.4)) drop-shadow(0 0 6px rgba(0,0,0,0.3))",
+                    filter: "drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))",
                   }}
                 >
-                  <defs>
-                    <linearGradient
-                      id="grad-center"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <stop
-                        offset="0%"
-                        stopColor={isSuccess ? "#4ade80" : "#f87171"}
-                      />
-                      <stop
-                        offset="100%"
-                        stopColor={isSuccess ? "#15803d" : "#b91c1c"}
-                      />
-                    </linearGradient>
-                  </defs>
-                  {isSuccess ? (
-                    <path
-                      stroke="url(#grad-center)"
-                      strokeWidth={3.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  ) : (
-                    <path
-                      stroke="url(#grad-center)"
-                      strokeWidth={3.5}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  )}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
               </div>
-            )}
+              <div>
+                <span className="block text-sm text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">
+                  Runtime
+                </span>
+                <strong className="text-3xl font-black text-slate-700 dark:text-slate-300">
+                  {runtime ? `${runtime} ms` : "N/A"}
+                </strong>
+              </div>
+            </div>
           </div>
+
+          <div className="group p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+            <div className="flex items-center gap-6">
+              <div
+                className="p-5 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-800/40 dark:to-pink-800/40 group-hover:animate-pulse border border-purple-200 dark:border-purple-600"
+                style={{
+                  filter: "drop-shadow(0 6px 12px rgba(168, 85, 247, 0.2))",
+                  transform:
+                    "perspective(1000px) rotateX(10deg) rotateY(-3deg)",
+                }}
+              >
+                <svg
+                  className="w-10 h-10 text-purple-600 dark:text-purple-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  style={{
+                    filter: "drop-shadow(0 2px 4px rgba(168, 85, 247, 0.3))",
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                  />
+                </svg>
+              </div>
+              <div>
+                <span className="block text-sm text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wide">
+                  Memory Usage
+                </span>
+                <strong className="text-3xl font-black text-slate-700 dark:text-slate-300">
+                  {memory ? `${memory} KB` : "N/A"}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="p-8 rounded-2xl bg-gradient-to-r from-slate-50 to-gray-50 dark:from-slate-800/50 dark:to-gray-800/50 border border-slate-200 dark:border-slate-700 mb-8 backdrop-blur-sm">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div
+                className="p-4 rounded-2xl bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-800/40 dark:to-green-800/40 border border-emerald-200 dark:border-emerald-600"
+                style={{
+                  filter: "drop-shadow(0 6px 12px rgba(34, 197, 94, 0.2))",
+                  transform:
+                    "perspective(1000px) rotateX(10deg) rotateY(-3deg)",
+                }}
+              >
+                <svg
+                  className="w-8 h-8 text-emerald-600 dark:text-emerald-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  style={{
+                    filter: "drop-shadow(0 2px 4px rgba(34, 197, 94, 0.3))",
+                  }}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <span className="text-xl font-bold text-slate-700 dark:text-slate-300">
+                Test Results Summary
+              </span>
+            </div>
+            <div className="text-4xl font-black text-slate-700 dark:text-slate-300 mb-2">
+              {passedTestCases || 0} / {totalTestCases}
+            </div>
+            <div className="text-slate-500 dark:text-slate-400 font-medium">
+              Test Cases Passed
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-6 mt-8">
+          <button
+            onClick={onClose}
+            className="flex-1 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border border-blue-500/20"
+            style={{
+              filter: "drop-shadow(0 8px 16px rgba(59, 130, 246, 0.3))",
+            }}
+          >
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style={{
+                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+              }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M11 17l-5-5m0 0l5-5m-5 5h12"
+              />
+            </svg>
+            Back to Code
+          </button>
+          {!isSuccess && (
+            <button
+              onClick={onClose}
+              className="flex-1 px-8 py-4 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border border-red-500/20"
+              style={{
+                filter: "drop-shadow(0 8px 16px rgba(239, 68, 68, 0.3))",
+              }}
+            >
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                style={{
+                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+                }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Try Again
+            </button>
+          )}
+          {isSuccess && (
+            <button
+              onClick={onClose}
+              className="flex-1 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border border-emerald-500/20"
+              style={{
+                filter: "drop-shadow(0 8px 16px rgba(34, 197, 94, 0.3))",
+              }}
+            >
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                style={{
+                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+                }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Continue
+            </button>
+          )}
         </div>
       </div>
     </div>
