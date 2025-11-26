@@ -33,7 +33,8 @@ const Footer = () => {
               algorithmic problem-solving with social networking and real-time
               collaboration. Master algorithms while building meaningful
               connections in the coding community. Built by{" "}
-              <span className="text-primary font-medium">Dhanush Kumar</span>.
+              <span className="text-primary font-medium">Dhanush Kumar SR</span>{" "}
+              & <span className="text-primary font-medium">D Tarun</span>.
             </p>
             <div className="flex space-x-4">
               <a
@@ -207,7 +208,7 @@ const Footer = () => {
           {/* Developer Info */}
           <div className="space-y-4">
             <h4 className="text-lg font-semibold text-base-content">
-              Developer
+              Main Developers
             </h4>
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
@@ -218,10 +219,10 @@ const Footer = () => {
                 </div>
                 <div>
                   <h5 className="font-medium text-base-content">
-                    Dhanush Kumar
+                    Dhanush Kumar SR & D Tarun
                   </h5>
                   <p className="text-sm text-base-content/70">
-                    Full Stack Developer
+                    Full Stack Developers
                   </p>
                 </div>
               </div>
@@ -282,3 +283,5 @@ const Footer = () => {
 };
 
 export default Footer;
+
+//
